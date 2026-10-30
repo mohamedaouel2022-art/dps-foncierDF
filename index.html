@@ -1,0 +1,1195 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DPS Foncier</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap">
+<style>
+/* Charte reprise de la plateforme Credit Risk (thème « Classic Bank ») :
+   bandeau de titre en dégradé, onglets en pilule, cartes de métriques, bandeau de décision, pied de page signé.
+   Mise en page : bandeau, onglets, puis un formulaire à gauche et le résultat à droite (empilés sur téléphone). */
+:root {
+  --ink: #0B2545;
+  --muted: #5B6B82;
+  --deep: #13427A;
+  --a1: #00A88F;
+  --a2: #0B8F7B;
+  --gold: #F5B400;
+  --red: #E5484D;
+  --line: #C9D3E0;
+  --bg: #F4F7FB;
+  --card: #FFFFFF;
+  --field: #F4F7FB;
+  --glow: rgba(11, 37, 69, .18);
+  --accent: #0B8F7B;
+  --accent-soft: #E0F3EF;
+  --bloq: #B42318;
+  --bloq-soft: #FDECEA;
+  --att: #7A4A00;
+  --att-soft: #FFF4D6;
+  --info: #13427A;
+  --info-soft: #E6EEF8;
+  --hero: linear-gradient(120deg, #0B2545 0%, #13427A 55%, #00A88F 120%);
+  --tabon: linear-gradient(120deg, #0B2545 0%, #13427A 70%, #0B8F7B 140%);
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --script: "Dancing Script", "Segoe Script", cursive;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #E6EDF7; --muted: #93A4BD; --line: #26405F; --bg: #0A1628; --card: #10213B; --field: #0A1628;
+    --glow: rgba(0, 0, 0, .45); --accent: #2DD4BF; --accent-soft: #12383A;
+    --bloq: #FF8A8F; --bloq-soft: #3A1B20; --att: #F5C451; --att-soft: #352A0E; --info: #8DB8F0; --info-soft: #14284A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ink: #E6EDF7; --muted: #93A4BD; --line: #26405F; --bg: #0A1628; --card: #10213B; --field: #0A1628;
+  --glow: rgba(0, 0, 0, .45); --accent: #2DD4BF; --accent-soft: #12383A;
+  --bloq: #FF8A8F; --bloq-soft: #3A1B20; --att: #F5C451; --att-soft: #352A0E; --info: #8DB8F0; --info-soft: #14284A;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+::selection { background: var(--a1); color: #fff; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.5 var(--font);
+  padding-block: 0 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+/* Halos de couleur en fond, comme sur la plateforme Credit Risk */
+body::before {
+  content: ""; position: fixed; inset: -15%; z-index: -1; pointer-events: none; filter: blur(30px);
+  background:
+    radial-gradient(circle at 20% 25%, rgba(0, 168, 143, .18), transparent 38%),
+    radial-gradient(circle at 80% 70%, rgba(19, 66, 122, .20), transparent 40%),
+    radial-gradient(circle at 60% 15%, rgba(245, 180, 0, .11), transparent 30%);
+  animation: drift 24s ease-in-out infinite alternate;
+}
+.wrap { max-width: 1180px; margin: 0 auto; }
+
+/* ---------- Bandeau de titre ---------- */
+.hero {
+  position: relative; overflow: hidden; color: #fff;
+  background: var(--hero); background-size: 220% 220%;
+  border-radius: 24px; padding: 30px 36px 34px; margin: 14px 0 18px;
+  border: 1px solid rgba(255, 255, 255, .5); box-shadow: 0 14px 40px var(--glow);
+  animation: gradientShift 14s ease infinite, fadeUp .7s ease both;
+}
+.hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%; background: rgba(255, 255, 255, .14); pointer-events: none; }
+.hero::before { width: 220px; height: 220px; right: -50px; top: -80px; animation: floaty 9s ease-in-out infinite; }
+.hero::after { width: 140px; height: 140px; right: 150px; bottom: -70px; animation: floaty 7s ease-in-out infinite reverse; }
+/* Logo de l'école : pastille blanche alignée à gauche, au-dessus du bandeau */
+.brand { margin: 22px 0 0; }
+.brand .logo { display: inline-block; line-height: 0; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 8px 18px; box-shadow: 0 6px 22px var(--glow); }
+.brand .logo img { display: block; height: 54px; width: auto; }
+.pill {
+  display: inline-block; margin-bottom: .6rem; padding: 2px 14px; border-radius: 999px;
+  background: rgba(255, 255, 255, .22); border: 1px solid rgba(255, 255, 255, .7);
+  font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+}
+.hero h1 { margin: 0; font: 800 clamp(1.9rem, 4.5vw, 2.4rem)/1.1 var(--font); letter-spacing: -.5px; text-wrap: balance; }
+.hero p { margin: .5rem 0 0; max-width: 62ch; opacity: .94; }
+.hero .sig { position: absolute; right: 34px; bottom: 16px; font: 700 1.9rem/1 var(--script); opacity: .95; }
+
+/* ---------- Onglets en pilule ---------- */
+.tabs { display: flex; gap: 6px; padding: 6px; margin-bottom: 22px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; box-shadow: 0 4px 18px var(--glow); }
+.tab {
+  appearance: none; flex: 1 1 0; min-width: 0; border: 0; border-radius: 999px; background: none; cursor: pointer;
+  padding: 10px 14px; font: 600 15px/1.25 var(--font); color: var(--ink); text-align: center;
+}
+.tab:hover { background: rgba(127, 150, 180, .18); }
+.tab[aria-selected="true"] { background: var(--tabon); color: #fff; box-shadow: 0 4px 14px var(--glow); }
+:focus-visible { outline: 2px solid var(--a1); outline-offset: 2px; border-radius: 4px; }
+
+/* ---------- Mise en page ---------- */
+.panel { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); gap: 24px; align-items: start; animation: fadeUp .45s ease both; }
+@media (max-width: 780px) { .panel { grid-template-columns: minmax(0, 1fr); } }
+
+.form {
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 20px; min-width: 0;
+  box-shadow: 0 6px 22px var(--glow);
+}
+@media (min-width: 781px) { .form { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; } }
+.form h2 { margin: 0 0 16px; padding-bottom: .4rem; border-bottom: 3px solid var(--a1); font: 800 1.25rem/1.25 var(--font); }
+.form h3 { margin: 22px 0 10px; font: 700 .72rem/1.3 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.form h3:first-of-type { margin-top: 0; }
+.result { min-width: 0; }
+.result h2 { margin: 0 0 14px; font: 800 1.25rem/1.25 var(--font); }
+
+.field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; min-width: 0; }
+.field label, .lbl { font-size: 13px; font-weight: 500; color: var(--muted); }
+.hint { font-size: 12px; color: var(--muted); }
+input[type="number"], input[type="text"], input[type="password"], select {
+  width: 100%; min-width: 0; padding: 9px 10px; font: 500 15px/1.3 var(--font); font-variant-numeric: tabular-nums; color: var(--ink);
+  background: var(--field); border: 1px solid var(--line); border-radius: 10px;
+}
+input[type="number"]:focus, input[type="text"]:focus, input[type="password"]:focus, select:focus { border-color: var(--a1); outline: none; box-shadow: 0 0 0 3px rgba(0, 168, 143, .22); }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; align-items: end; }
+.chk { display: flex; align-items: flex-start; gap: 10px; margin: 0 0 10px; font-size: 14px; color: var(--ink); cursor: pointer; }
+.chk input { margin: 3px 0 0; width: 16px; height: 16px; accent-color: var(--a1); flex: none; }
+.sub { margin-left: 26px; }
+.row-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.btn {
+  appearance: none; font: 600 13px/1.2 var(--font); padding: 9px 14px; border-radius: 12px; cursor: pointer;
+  background: var(--card); color: var(--ink); border: 1px solid var(--line);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.btn:hover { border-color: var(--a1); transform: translateY(-2px); }
+.btn:active { transform: scale(.97); }
+.btn.primary { background: linear-gradient(120deg, #0B8F7B, #13427A); color: #fff; border: 0; font-weight: 700; box-shadow: 0 6px 18px var(--glow); }
+.btn.primary:hover { box-shadow: 0 12px 26px var(--glow); }
+
+/* ---------- Cartes de métriques ---------- */
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin: 0 0 18px; }
+.metric {
+  min-width: 0; background: var(--card); border: 1px solid var(--line); border-left: 5px solid var(--a1); border-radius: 18px;
+  padding: 14px 16px; box-shadow: 0 6px 22px var(--glow); animation: fadeUp .6s ease both; transition: transform .25s ease, box-shadow .25s ease;
+}
+.metric:nth-child(2) { animation-delay: .08s; }
+.metric:nth-child(3) { animation-delay: .16s; }
+.metric:nth-child(4) { animation-delay: .24s; }
+.metric:hover { transform: translateY(-4px); box-shadow: 0 16px 32px var(--glow); }
+.metric .k { display: block; color: var(--muted); font-weight: 600; font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; }
+.metric .v { display: block; margin-top: 4px; font-weight: 800; font-size: clamp(1.1rem, 1.8vw, 1.45rem); line-height: 1.2; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.metric .u { font-size: .75em; font-weight: 600; color: var(--muted); }
+.metric.blue { border-left-color: var(--deep); }
+.metric.gold { border-left-color: var(--gold); }
+.metric.red { border-left-color: var(--red); }
+.metric.red .v { color: var(--bloq); }
+
+/* ---------- Tableaux, détails, barre de répartition ---------- */
+.kv { margin: 0 0 6px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; padding: 14px 18px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 6px 22px var(--glow); }
+.kv dt { color: var(--muted); font-size: 14px; }
+.kv dd { margin: 0; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.scroll { overflow-x: auto; padding: 6px 12px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 6px 22px var(--glow); }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+th, td { padding: 11px 8px; text-align: right; border-bottom: 1px solid var(--line); font-size: 14px; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+th:first-child, td:first-child { text-align: left; white-space: normal; }
+th { font: 700 .7rem/1.3 var(--font); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: normal; }
+td.num { font-weight: 600; }
+tr.best td { background: var(--accent-soft); }
+tr.best td:first-child { font-weight: 700; border-radius: 10px 0 0 10px; }
+tr.best td:last-child { border-radius: 0 10px 10px 0; }
+.tag { display: inline-block; margin-left: 8px; padding: 1px 9px; font: 700 .68rem/1.6 var(--font); letter-spacing: .06em; text-transform: uppercase; background: linear-gradient(120deg, #0B8F7B, #13427A); color: #fff; border-radius: 999px; }
+.neg { color: var(--bloq); }
+.note { margin: 12px 0 0; font-size: 13px; color: var(--muted); }
+.err { margin: 0 0 12px; padding: 10px 14px; border-radius: 12px; border-left: 5px solid var(--red); background: var(--bloq-soft); color: var(--bloq); font-size: 14px; }
+
+.share { display: flex; height: 14px; border-radius: 999px; overflow: hidden; margin: 4px 0 8px; background: var(--line); }
+.share > span { display: block; height: 100%; transition: width .6s ease; }
+.share .apporteur { background: linear-gradient(90deg, #0B8F7B, #00A88F); }
+.share .autres { background: var(--deep); opacity: .55; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+
+/* ---------- Bandeau de décision ---------- */
+.decision {
+  margin: 18px 0 0; padding: 18px 24px; border-radius: 20px; color: #fff; font-weight: 700; font-size: 1.2rem; line-height: 1.35;
+  box-shadow: 0 10px 30px var(--glow); animation: popIn .55s cubic-bezier(.2, .9, .3, 1.2) both;
+}
+.decision.ok { background: linear-gradient(120deg, #0B8F7B, #087565); }
+.decision.warn { background: linear-gradient(120deg, #F5B400, #FFCB3D); color: #0B2545; }
+.decision.no { background: linear-gradient(120deg, #B93036, #E5484D); }
+.decision small { display: block; margin-top: 4px; font-weight: 500; font-size: .85rem; opacity: .95; }
+
+/* ---------- Alertes du contrôle juridique ---------- */
+.alerts { margin-top: 18px; }
+.alert {
+  margin: 0 0 12px; padding: 14px 18px; background: var(--card); border: 1px solid var(--line); border-left: 5px solid var(--line);
+  border-radius: 14px; box-shadow: 0 4px 16px var(--glow); animation: slideIn .4s ease both;
+}
+.alert.BLOQUANT { border-left-color: var(--red); }
+.alert.ATTENTION { border-left-color: var(--gold); }
+.alert.INFO { border-left-color: var(--deep); }
+.alert-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+.sev { font: 700 .68rem/1.6 var(--font); letter-spacing: .06em; padding: 1px 10px; border-radius: 999px; }
+.sev.BLOQUANT { background: var(--bloq-soft); color: var(--bloq); }
+.sev.ATTENTION { background: var(--att-soft); color: var(--att); }
+.sev.INFO { background: var(--info-soft); color: var(--info); }
+.theme { font-weight: 700; }
+.alert p { margin: 0; }
+.refs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.ref { appearance: none; cursor: pointer; font: 500 12px/1.4 var(--font); color: var(--ink); background: var(--field); border: 1px solid var(--line); border-radius: 999px; padding: 2px 11px; transition: border-color .2s ease, color .2s ease; }
+.ref:hover { border-color: var(--a1); }
+.ref[aria-expanded="true"] { border-color: var(--a1); color: var(--accent); font-weight: 700; }
+.refdetail { margin-top: 8px !important; padding: 8px 12px; font-size: 13px; background: var(--field); border-radius: 10px; color: var(--muted); }
+.refdetail b { color: var(--ink); font-weight: 700; }
+.empty { color: var(--muted); }
+
+
+/* ---------- Assistant juridique ---------- */
+.starters { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.starters .btn { text-align: left; font-weight: 500; }
+#as-mode { margin: 0 0 4px; padding: 8px 12px; border-radius: 12px; background: var(--accent-soft); font-size: 13px; color: var(--ink); }
+#as-mode.api { border-left: 5px solid var(--gold); }
+.chat { display: flex; flex-direction: column; gap: 12px; max-height: min(62vh, 560px); overflow-y: auto; padding: 2px 2px 6px; }
+.msg { max-width: 92%; padding: 12px 16px; border-radius: 18px; overflow-wrap: anywhere; animation: slideIn .35s ease both; }
+.msg p { margin: 0 0 8px; }
+.msg p:last-of-type { margin-bottom: 0; }
+.msg.user { align-self: flex-end; background: var(--tabon); color: #fff; border-bottom-right-radius: 6px; font-weight: 500; }
+.msg.bot { align-self: flex-start; background: var(--card); border: 1px solid var(--line); border-left: 5px solid var(--a1); box-shadow: 0 4px 16px var(--glow); border-bottom-left-radius: 6px; }
+.msg.attente { color: var(--muted); }
+.msg .src { display: block; margin-top: 10px; font: 700 .66rem/1 var(--font); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.chat-form { display: flex; gap: 10px; margin-top: 14px; }
+.chat-form input { flex: 1; }
+@media (max-width: 640px) { .msg { max-width: 100%; } }
+
+/* ---------- Pied de page signé ---------- */
+.footer { margin: 2.5rem auto 0; padding: 1rem; max-width: 80ch; text-align: center; color: var(--muted); border-top: 1px solid var(--line); font-size: .85rem; }
+.footer p { margin: 0 0 8px; }
+.footer .sigtxt { font: 700 1.25rem/1 var(--script); color: var(--ink); }
+
+/* ---------- Mouvement ---------- */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+@keyframes floaty { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-14px) scale(1.07); } }
+@keyframes popIn { 0% { opacity: 0; transform: scale(.92); } 60% { transform: scale(1.03); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
+@keyframes drift { from { transform: translate(-3%, -2%) rotate(0deg) scale(1); } to { transform: translate(3%, 3%) rotate(8deg) scale(1.12); } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
+
+@media (max-width: 640px) {
+  .hero { padding: 24px 20px 56px; border-radius: 20px; }
+  .brand { margin-top: 16px; }
+  .brand .logo { padding: 6px 14px; border-radius: 14px; }
+  .brand .logo img { height: 42px; }
+  .hero .sig { left: 20px; right: auto; bottom: 14px; font-size: 1.5rem; }
+  .tabs { border-radius: 22px; gap: 4px; }
+  .tab { padding: 9px 4px; font-size: 12px; }
+  .scroll { padding: 4px 8px; }
+  th, td { padding: 9px 4px; font-size: 13px; }
+  th { font-size: .62rem; }
+  .tag { display: block; width: max-content; margin: 4px 0 0; }
+  .decision { font-size: 1.05rem; padding: 16px 18px; }
+}
+</style>
+</head>
+<body>
+
+
+<header class="wrap">
+  <div class="brand"><span class="logo"><img src="data:image/png;base64,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" alt="IHEC Carthage"></span></div>
+  <div class="hero">
+    <span class="pill">Droit préférentiel de souscription · Tunisie</span>
+    <h1>DPS Foncier</h1>
+    <span class="sig">M.A</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="tabs" role="tablist" aria-label="Outils">
+    <button class="tab" role="tab" id="t-souscription" data-tab="souscription" aria-selected="true" aria-controls="p-souscription">Droit de souscription</button>
+    <button class="tab" role="tab" id="t-apport" data-tab="apport" aria-selected="false" aria-controls="p-apport">Apport d'immeuble</button>
+    <button class="tab" role="tab" id="t-juridique" data-tab="juridique" aria-selected="false" aria-controls="p-juridique">Contrôle juridique</button>
+    <button class="tab" role="tab" id="t-assistant" data-tab="assistant" aria-selected="false" aria-controls="p-assistant">Assistant juridique</button>
+  </div>
+
+  <!-- Onglet 1 : calculateur de droit -->
+  <section class="panel" id="p-souscription" role="tabpanel" aria-labelledby="t-souscription">
+    <div class="form">
+      <h2>Opération</h2>
+      <div class="field"><label for="f-N">Actions anciennes (A)</label><input id="f-N" type="number" step="any" min="0" value="1000000" inputmode="decimal"></div>
+      <div class="pair">
+        <div class="field"><label for="f-P">Cours de clôture la veille (DT)</label><input id="f-P" type="number" step="any" min="0" value="8" inputmode="decimal"></div>
+        <div class="field"><label for="f-S">Prix d'émission (DT)</label><input id="f-S" type="number" step="any" min="0" value="6.5" inputmode="decimal"></div>
+      </div>
+      <div class="pair">
+        <div class="field"><label for="f-p">Actions nouvelles</label><input id="f-p" type="number" step="1" min="1" value="1" inputmode="numeric"></div>
+        <div class="field"><label for="f-q">Pour actions anciennes</label><input id="f-q" type="number" step="1" min="1" value="2" inputmode="numeric"></div>
+      </div>
+      <div class="field"><label for="f-D">Différence de jouissance en dividende (DT)</label><input id="f-D" type="number" step="any" min="0" value="0.35" inputmode="decimal"><span class="hint">Dividende que les actions nouvelles ne touchent pas (D). Faute d'information, la Bourse retient le dividende de l'année précédente.</span></div>
+      <div class="field"><label for="f-ligne">Cours de la ligne principale pendant la période (DT)</label><input id="f-ligne" type="number" step="any" min="0" value="8.03" placeholder="Facultatif" inputmode="decimal"><span class="hint">Pour le cours de référence du droit un jour de la période de souscription.</span></div>
+      <h3>Associé</h3>
+      <div class="field"><label for="f-det">Actions détenues</label><input id="f-det" type="number" step="1" min="1" value="10000" inputmode="numeric"></div>
+      <div class="field"><label for="f-marche">Prix du droit sur le marché (DT)</label><input id="f-marche" type="number" step="any" min="0" placeholder="Vide : valeur théorique" inputmode="decimal"><span class="hint">Laissez vide pour utiliser la valeur théorique du droit.</span></div>
+    </div>
+    <div class="result" aria-live="polite">
+      <h2>Que faire de vos droits</h2>
+      <p class="err" id="f-erreur" hidden></p>
+      <div id="f-out">
+        <div class="metrics" id="f-kv"></div>
+        <dl class="kv" id="f-kv2"></dl>
+        <div class="scroll">
+          <table>
+            <thead><tr><th>Choix</th><th>Participation finale</th><th>Gain ou perte (DT)</th></tr></thead>
+            <tbody id="f-body"></tbody>
+          </table>
+        </div>
+        <div class="decision ok"><span id="f-verdict"></span><small id="f-cash"></small></div>
+        <p class="note">Valeurs avant frais de courtage et fiscalité. Exemple chargé : n°1 du document de la Bourse de Tunis (El Wifack Leasing, 1 action nouvelle pour 2, 6,500 DT). Modifiez les champs.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Onglet 2 : apport d'immeuble -->
+  <section class="panel" id="p-apport" role="tabpanel" aria-labelledby="t-apport" hidden>
+    <div class="form">
+      <h2>Apport en nature</h2>
+      <div class="field"><label for="a-N">Actions anciennes</label><input id="a-N" type="number" step="any" min="0" value="1000000" inputmode="decimal"></div>
+      <div class="pair">
+        <div class="field"><label for="a-cours">Cours de l'action (DT)</label><input id="a-cours" type="number" step="any" min="0" value="20" inputmode="decimal"></div>
+        <div class="field"><label for="a-prix">Prix d'émission (DT)</label><input id="a-prix" type="number" step="any" min="0" value="20" inputmode="decimal"></div>
+      </div>
+      <div class="field"><label for="a-decl">Valeur déclarée de l'immeuble (DT)</label><input id="a-decl" type="number" step="any" min="0" value="5000000" inputmode="decimal"></div>
+      <div class="field"><label for="a-reel">Valeur réelle ou expertisée (DT)</label><input id="a-reel" type="number" step="any" min="0" value="3500000" inputmode="decimal"></div>
+      <button class="btn primary" id="a-vers-juridique" type="button">Reporter dans le contrôle juridique</button>
+    </div>
+    <div class="result" aria-live="polite">
+      <h2>Effet sur les autres associés</h2>
+      <p class="err" id="a-erreur" hidden></p>
+      <div id="a-out">
+        <div class="metrics" id="a-metrics"></div>
+        <div class="share" id="a-share" role="img" aria-label="Répartition du capital après l'apport"></div>
+        <div class="legend" id="a-legend"></div>
+        <dl class="kv" id="a-kv"></dl>
+        <div class="decision ok" id="a-decision"><span id="a-verdict"></span></div>
+        <p class="note">Quand l'immeuble est surévalué, l'apporteur reçoit plus d'actions que la valeur réelle de son bien ne le justifie. Les autres associés portent la différence. Exemple chargé : modifiez les champs.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Onglet 3 : contrôle juridique -->
+  <section class="panel" id="p-juridique" role="tabpanel" aria-labelledby="t-juridique" hidden>
+    <div class="form">
+      <h2>Dossier</h2>
+      <div class="row-actions">
+        <button class="btn" id="j-exemple" type="button">Dossier d'exemple</button>
+        <button class="btn" id="j-vide" type="button">Dossier vide</button>
+      </div>
+
+      <h3>Société</h3>
+      <div class="pair">
+        <div class="field"><label for="j-forme">Forme</label>
+          <select id="j-forme"><option value="SA">SA</option><option value="SARL">SARL</option><option value="SCI">SCI</option></select></div>
+        <div class="field"><label for="j-liberation">Libération</label>
+          <select id="j-liberation"><option value="numeraire">Numéraire</option><option value="nature">Nature</option><option value="mixte">Mixte</option><option value="incorporation">Incorporation de réserves</option></select></div>
+      </div>
+      <label class="chk"><input type="checkbox" id="j-age"><span>Décision de l'assemblée extraordinaire prise</span></label>
+      <label class="chk" id="gr-capital"><input type="checkbox" id="j-capital"><span>Capital existant intégralement libéré</span></label>
+      <label class="chk"><input type="checkbox" id="j-ape"><span>Société cotée ou faisant appel public à l'épargne</span></label>
+
+      <div id="gr-souscription">
+        <h3>Souscription en numéraire</h3>
+        <div id="gr-jort"><label class="chk"><input type="checkbox" id="j-jort"><span>Modalités annoncées au Journal officiel</span></label></div>
+        <div class="field" id="gr-delai"><label for="j-delai">Délai de souscription (jours)</label><input id="j-delai" type="number" step="1" min="0" inputmode="numeric"></div>
+        <div class="field"><label for="j-taux">Part souscrite à la clôture (%)</label><input id="j-taux" type="number" step="any" min="0" max="100" inputmode="decimal" placeholder="Facultatif"></div>
+        <label class="chk"><input type="checkbox" id="j-limit"><span>Limitation aux souscriptions reçues prévue</span></label>
+      </div>
+
+      <div id="gr-dps">
+        <h3>Suppression du DPS</h3>
+        <label class="chk"><input type="checkbox" id="j-dps"><span>Le DPS est supprimé</span></label>
+        <div class="sub" id="gr-rapports">
+          <label class="chk"><input type="checkbox" id="j-rcons"><span>Rapport du conseil</span></label>
+          <label class="chk"><input type="checkbox" id="j-rcac"><span>Rapport des commissaires aux comptes</span></label>
+        </div>
+      </div>
+
+      <div id="gr-nature">
+        <h3>Apport en nature</h3>
+        <label class="chk"><input type="checkbox" id="j-comm"><span>Commissaire aux apports désigné</span></label>
+        <div id="gr-sa-nature">
+          <label class="chk"><input type="checkbox" id="j-eval"><span>Évaluation approuvée par l'assemblée</span></label>
+          <label class="chk"><input type="checkbox" id="j-reduite"><span>L'assemblée a réduit l'évaluation</span></label>
+          <div class="sub" id="gr-accord"><label class="chk"><input type="checkbox" id="j-accord"><span>Accord exprès de l'apporteur obtenu</span></label></div>
+        </div>
+        <div class="pair">
+          <div class="field"><label for="j-vdecl">Valeur déclarée (DT)</label><input id="j-vdecl" type="number" step="any" min="0" inputmode="decimal"></div>
+          <div class="field"><label for="j-vexp">Valeur expertisée (DT)</label><input id="j-vexp" type="number" step="any" min="0" inputmode="decimal"></div>
+        </div>
+      </div>
+
+      <h3>Immeuble et droit foncier</h3>
+      <label class="chk"><input type="checkbox" id="j-immeuble"><span>L'opération porte sur un immeuble</span></label>
+      <div class="sub" id="gr-immeuble">
+        <div class="field"><label for="j-immat">Immeuble immatriculé</label>
+          <select id="j-immat"><option value="">Je ne sais pas</option><option value="oui">Oui</option><option value="non">Non</option></select></div>
+        <div id="gr-immat-oui">
+          <label class="chk"><input type="checkbox" id="j-acte"><span>Acte rédigé dans la forme légale</span></label>
+          <label class="chk"><input type="checkbox" id="j-inscr"><span>Inscription au Livre Foncier prévue</span></label>
+        </div>
+        <label class="chk"><input type="checkbox" id="j-reserve"><span>Immeuble dans un périmètre de réserve foncière</span></label>
+        <div class="sub" id="gr-purge"><label class="chk"><input type="checkbox" id="j-purge"><span>Bénéficiaire du droit de priorité notifié</span></label></div>
+        <label class="chk"><input type="checkbox" id="j-etranger"><span>Acquéreur étranger</span></label>
+        <div class="sub" id="gr-etranger">
+          <label class="chk"><input type="checkbox" id="j-autor"><span>Autorisation du gouverneur obtenue</span></label>
+          <label class="chk"><input type="checkbox" id="j-agri"><span>Terre agricole</span></label>
+        </div>
+      </div>
+
+      <h3>Fiscalité</h3>
+      <label class="chk"><input type="checkbox" id="j-cession"><span>Cession de titres d'une société qui détient des immeubles</span></label>
+    </div>
+
+    <div class="result" aria-live="polite">
+      <h2>Alertes</h2>
+      <div class="metrics" id="j-counts"></div>
+      <div class="decision ok" id="j-decision"><span id="j-resume"></span></div>
+      <div class="alerts" id="j-liste"></div>
+    </div>
+  </section>
+
+  <!-- Onglet 4 : assistant juridique -->
+  <section class="panel" id="p-assistant" role="tabpanel" aria-labelledby="t-assistant" hidden>
+    <div class="form">
+      <h2>Assistant juridique</h2>
+      <p id="as-mode"></p>
+      <h3>Questions fréquentes</h3>
+      <div class="starters" id="as-starters">
+        <button class="btn" type="button" data-q="Quel délai pour souscrire ?">Quel délai pour souscrire ?</button>
+        <button class="btn" type="button" data-q="Comment supprimer le DPS ?">Comment supprimer le DPS ?</button>
+        <button class="btn" type="button" data-q="Comment calculer la valeur d'un droit de souscription ?">Comment calculer la valeur d'un droit de souscription ?</button>
+        <button class="btn" type="button" data-q="Apport d'un immeuble : quelles conditions ?">Apport d'un immeuble : quelles conditions ?</button>
+        <button class="btn" type="button" data-q="Que faut-il corriger dans mon dossier ?">Que faut-il corriger dans mon dossier ?</button>
+        <button class="btn" type="button" data-q="Quels recours pour les minoritaires ?">Quels recours pour les minoritaires ?</button>
+      </div>
+      <h3>Mode API (facultatif)</h3>
+      <div class="field"><label for="as-cle">Clé API Anthropic</label><input id="as-cle" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-..."><span class="hint">Sans clé, l'assistant répond hors connexion à partir des textes lus. Avec une clé, il interroge Claude avec ces mêmes textes et votre dossier. La clé reste dans cet onglet, n'est jamais enregistrée et n'est envoyée qu'à api.anthropic.com.</span></div>
+      <button class="btn" id="as-effacer" type="button">Effacer la conversation</button>
+    </div>
+    <div class="result">
+      <h2>Posez votre question</h2>
+      <div class="chat" id="as-chat" role="log" aria-live="polite"></div>
+      <form class="chat-form" id="as-form">
+        <input id="as-q" type="text" autocomplete="off" placeholder="Ex. : quel délai pour souscrire dans une SA ?" aria-label="Votre question">
+        <button class="btn primary" type="submit">Envoyer</button>
+      </form>
+      <p class="note">Réponses indicatives tirées des textes lus (Code des sociétés commerciales 2022, document de la Bourse de Tunis). Elles ne remplacent pas l'avis d'un avocat ou d'un notaire tunisien.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Conçu &amp; développé par <span class="sigtxt">M.A</span> &middot; DPS Foncier</p>
+  </footer>
+</div>
+
+<script id="moteur">
+/* Moteur : mêmes règles et mêmes formules que dps_foncier.py et droit_tunisien.py. */
+const BLOQUANT = "BLOQUANT", ATTENTION = "ATTENTION", INFO = "INFO";
+const ORDRE = { BLOQUANT: 0, ATTENTION: 1, INFO: 2 };
+const DELAI_MIN_SA = 15, DELAI_MIN_SARL = 21, SEUIL_ECART_VALEUR = 0.10;
+
+const REFERENCES = {
+  "CSC art. 3": ["Si les apports comprennent un immeuble immatriculé, l'acte doit être rédigé selon la législation en vigueur, sous peine de nullité.", "officiel"],
+  "CSC art. 11": ["Les droits fondamentaux de l'associé ne peuvent être réduits ou limités par les statuts ou par les décisions des assemblées.", "officiel"],
+  "CSC art. 100": ["SARL : l'apport en nature est évalué par un commissaire aux apports désigné à l'unanimité des associés ou par ordonnance du président du tribunal. Les associés peuvent décider à la majorité de s'en passer si chaque apport ne dépasse pas 3 000 dinars. Sans commissaire, ils sont solidairement responsables envers les tiers pendant trois ans.", "officiel"],
+  "CSC art. 131": ["SARL : statuts modifiés par les associés représentant les trois quarts du capital, ou selon le quorum et la majorité prévus aux statuts. Chaque associé participe à l'augmentation selon sa part, dans un délai d'au moins 21 jours à compter de l'ouverture, avisé par lettre recommandée avec accusé de réception ou tout autre moyen laissant une trace écrite. Les parts non souscrites sont réparties entre les autres associés sous 21 jours, puis la souscription peut être ouverte aux tiers par décision de l'assemblée. Nul associé ne peut être obligé d'augmenter son engagement.", "officiel"],
+  "CSC art. 133": ["SARL : toute augmentation est décidée selon l'article 131. L'augmentation par incorporation de réserves peut être décidée par les associés représentant plus de la moitié du capital.", "officiel"],
+  "CSC art. 134": ["SARL : les fonds d'une souscription en numéraire sont déposés auprès d'un établissement financier. Si l'augmentation n'est pas réalisée dans les six mois de l'assemblée, tout apporteur peut demander à retirer son apport.", "officiel"],
+  "CSC art. 135": ["SARL : si la valeur retenue diffère de celle du commissaire, associés et souscripteurs sont solidairement responsables envers les tiers pendant trois ans.", "officiel"],
+  "CSC art. 163": ["Avant toute souscription, dépôt du projet de statuts au greffe du tribunal de première instance du siège. Les articles 293 et 302 renvoient à ces formalités pour la publicité de l'augmentation.", "officiel"],
+  "CSC art. 173": ["SA : les commissaires aux apports sont désignés par ordonnance sur requête du président du tribunal de première instance, parmi les experts judiciaires, et évaluent chaque apport sous leur responsabilité (description, mode d'évaluation, intérêt pour la société). L'article 306 y renvoie pour l'augmentation de capital.", "officiel"],
+  "CSC art. 174": ["Ne peuvent être commissaires aux apports : l'apporteur, ses ascendants, descendants, collatéraux et alliés jusqu'au deuxième degré, ceux des administrateurs ou membres du directoire lors des augmentations, leurs conjoints, et les autres personnes visées par l'article.", "officiel"],
+  "CSC art. 284 bis": ["SA : les actionnaires détenant au moins 5 % du capital (3 % pour une société faisant appel public à l'épargne, ou une participation d'au moins un million de dinars), non membres du conseil, peuvent poser des questions écrites au moins deux fois par an. Réponse écrite due dans le mois.", "officiel"],
+  "CSC art. 290": ["SA : les actionnaires détenant au moins 10 % du capital peuvent demander l'annulation des décisions contraires aux statuts ou portant atteinte aux intérêts de la société, prises dans l'intérêt de quelques actionnaires ou d'un tiers. L'action se prescrit par un an.", "officiel"],
+  "CSC art. 290 bis": ["SA : les actionnaires détenant au moins 10 % du capital peuvent demander au juge des référés une expertise de gestion. Le rapport va notamment au Conseil du marché financier pour les sociétés faisant appel public à l'épargne.", "officiel"],
+  "CSC art. 290 ter": ["SA ne faisant pas appel public à l'épargne : les actionnaires détenant 5 % au plus peuvent imposer le rachat de leurs titres à un prix fixé par expertise. Cet article ne s'applique pas aux sociétés faisant appel public à l'épargne.", "officiel"],
+  "CSC art. 292": ["SA : l'augmentation se fait par actions nouvelles ou par majoration de la valeur nominale. Libération en numéraire, par compensation de créances, par incorporation de réserves, de bénéfices ou de primes d'émission, par apports en nature ou par conversion d'obligations. La majoration de la valeur nominale exige l'unanimité, sauf incorporation de réserves, de bénéfices ou de primes.", "officiel"],
+  "CSC art. 293": ["SA : l'augmentation est décidée par l'assemblée générale extraordinaire, dans les conditions de la loi et sans contredire les dispositions légales impératives. La décision est publiée selon l'article 163.", "officiel"],
+  "CSC art. 294": ["SA : l'assemblée peut déléguer au conseil la réalisation de l'augmentation, qui doit intervenir dans les cinq ans de la décision. Le quart de l'augmentation et la totalité de la prime d'émission doivent être libérés dans le délai de l'alinéa 3, sinon la décision est réputée non écrite (le texte français imprimé indique cinq ans, une note de l'Imprimerie officielle demande de lire six mois selon la version arabe). Une clause des statuts donnant au conseil le pouvoir de décider l'augmentation est réputée non avenue.", "officiel"],
+  "CSC art. 295": ["SA : le capital social doit être intégralement libéré avant toute émission de nouvelles actions, à peine de nullité.", "officiel"],
+  "CSC art. 296": ["SA : DPS proportionnel au montant des actions, négociable lorsqu'il est détaché d'actions négociables, sinon cessible comme l'action. Renonciation individuelle possible, clause contraire non avenue.", "officiel"],
+  "CSC art. 297": ["SA : les actions non souscrites sont attribuées aux actionnaires qui ont demandé plus que leur droit préférentiel (souscription à titre réductible), proportionnellement à leurs parts et dans la limite de leurs demandes.", "officiel"],
+  "CSC art. 298": ["SA : limitation aux souscriptions si elles atteignent les trois quarts et si l'assemblée l'a prévu, redistribution aux actionnaires sauf décision contraire, offre au public si l'assemblée l'a admise.", "officiel"],
+  "CSC art. 299": ["SA : augmentation non réalisée si les souscriptions libérées n'atteignent pas la totalité (ou les trois quarts en cas de limitation). Le conseil peut limiter d'office l'augmentation quand le non souscrit est inférieur à 5 %.", "officiel"],
+  "CSC art. 300": ["SA : suppression du DPS par l'assemblée extraordinaire, qui approuve à peine de nullité le rapport du conseil et celui des commissaires aux comptes.", "officiel"],
+  "CSC art. 301": ["SA : délai d'exercice d'au moins quinze jours, à compter de l'annonce au Journal officiel du droit préférentiel, des dates d'ouverture et de clôture et de la valeur des actions à l'émission.", "officiel"],
+  "CSC art. 302": ["SA : formalités de publicité des articles 163 et suivants avant l'ouverture de la souscription.", "officiel"],
+  "CSC art. 303 et 304": ["SA : le contrat de souscription est constaté par un bulletin de souscription. Les souscriptions et versements sont constatés par un certificat de l'établissement dépositaire des fonds.", "officiel"],
+  "CSC art. 306": ["SA : apports en nature évalués par un commissaire aux apports. L'assemblée délibère sur l'évaluation et, si elle l'approuve, déclare l'augmentation réalisée. Si elle réduit l'évaluation, l'accord exprès de l'apporteur est requis, sinon l'augmentation n'est pas réalisée. Les actions d'apport doivent être intégralement libérées dès leur émission.", "officiel"],
+  "BVMT droits de souscription": ["Document de la Bourse de Tunis (mise à jour mars 2009). Droit de souscription au détachement : Ds = N/(A+N) x (C - PE - D). Pendant la période : Ds = N/A x (C - D - PE). Les droits sont négociables pendant la période. Les actions nouvelles non assimilées valent C - D et sont négociables à la date fixée par l'avis de réalisation publié au bulletin de la Bourse.", "bvmt"],
+  "CDR art. 305": ["Un droit réel sur immeuble immatriculé ne se constitue qu'à compter de son inscription au Livre Foncier.", "lu"],
+  "CDR art. 308": ["Les droits réels existants sont inscrits sur le titre, un droit non inscrit est réputé non avenu.", "lu"],
+  "CDR art. 317 et 318": ["L'immatriculation est facultative, tout titulaire d'un droit réel immobilier peut la requérir.", "lu"],
+  "CATU art. 42 à 44": ["Droit de priorité d'achat dans les périmètres de réserves foncières : prénotation sur le titre, réponse du bénéficiaire sous un an, annulation possible du contrat conclu en violation.", "lu"],
+  "CDET art. 29": ["Les cessions de titres portant sur des droits de propriété ou de jouissance d'immeubles sont réputées porter sur les biens, règles des ventes d'immeubles.", "lu"],
+  "Note commune 16/2011": ["Plus value de cession de titres : régime décrit pour 2011, à confronter aux lois de finances récentes.", "a verifier"],
+  "Décret du 4 juin 1957": ["Autorisation préalable du gouverneur pour l'acquisition d'immeubles par un étranger.", "secondaire"],
+  "Loi 2005-40": ["Exceptions à l'autorisation (zones touristiques ou industrielles), selon un article de praticien.", "secondaire"],
+  "Terres agricoles": ["Un étranger ne peut pas acquérir de terre agricole, selon un article de praticien de 2013.", "secondaire"]
+};
+
+function arrondi(x, d) { const f = Math.pow(10, d); return Math.round(x * f) / f; }
+
+function validerOperation(op) {
+  if (!(op.actions_anciennes > 0)) throw new Error("Le nombre d'actions anciennes doit être positif.");
+  if (!(op.parite_nouvelles > 0) || !(op.parite_anciennes > 0)) throw new Error("La parité doit être strictement positive.");
+  if (!(op.prix_souscription > 0) || !(op.cours_cum > 0)) throw new Error("Les prix doivent être strictement positifs.");
+  if (!(dj(op) >= 0)) throw new Error("La différence de jouissance ne peut pas être négative.");
+}
+function dj(op) { return op.difference_jouissance || 0; }
+function nouvellesActions(op) { return op.actions_anciennes * op.parite_nouvelles / op.parite_anciennes; }
+/* Cours théorique du droit au détachement (BVMT 1.1) : Ds = N / (A + N) x (C - PE - D) */
+function valeurDroit(op) {
+  const n = nouvellesActions(op);
+  return n / (op.actions_anciennes + n) * (op.cours_cum - op.prix_souscription - dj(op));
+}
+/* Cours de référence de l'action après détachement : C moins le cours théorique du droit */
+function terp(op) { return op.cours_cum - valeurDroit(op); }
+/* Cours de référence du droit pendant la période de souscription (BVMT 1.2) : Ds = N / A x (C - D - PE) */
+function valeurDroitPeriode(op, coursLigne) {
+  if (!(coursLigne > 0)) throw new Error("Le cours de la ligne principale doit être strictement positif.");
+  return op.parite_nouvelles / op.parite_anciennes * (coursLigne - dj(op) - op.prix_souscription);
+}
+/* Cours de référence d'une action nouvelle non assimilée (BVMT 1.3) : NS = C - D */
+function coursActionNouvelle(coursLigne, differenceJouissance) { return coursLigne - (differenceJouissance || 0); }
+
+function simulationAssocie(op, detenues, prixDroitMarche) {
+  if (!(detenues > 0) || detenues > op.actions_anciennes) throw new Error("Nombre d'actions détenues invalide.");
+  const nTotal = nouvellesActions(op);
+  const vDroit = valeurDroit(op);
+  const coursEx = op.cours_cum - vDroit;
+  const prixDroit = (prixDroitMarche === null || prixDroitMarche === undefined) ? vDroit : prixDroitMarche;
+  const valeurInitiale = detenues * op.cours_cum;
+  const nouvelles = detenues * op.parite_nouvelles / op.parite_anciennes;
+  const cout = nouvelles * op.prix_souscription;
+  const valeurExercer = detenues * coursEx + nouvelles * (coursEx - dj(op)) - cout;
+  const pctExercer = (detenues + nouvelles) / (op.actions_anciennes + nTotal);
+  const valeurVendre = detenues * coursEx + detenues * prixDroit;
+  const pctVendre = detenues / (op.actions_anciennes + nTotal);
+  const valeurExpirer = detenues * coursEx;
+  return {
+    valeur_droit_theorique: arrondi(vDroit, 4),
+    cours_theorique_ex_droit: arrondi(coursEx, 4),
+    participation_initiale: arrondi(detenues / op.actions_anciennes, 6),
+    exercer: { participation_finale: arrondi(pctExercer, 6), gain_ou_perte: arrondi(valeurExercer - valeurInitiale, 3) },
+    vendre: { participation_finale: arrondi(pctVendre, 6), gain_ou_perte: arrondi(valeurVendre - valeurInitiale, 3) },
+    expirer: { participation_finale: arrondi(pctVendre, 6), gain_ou_perte: arrondi(valeurExpirer - valeurInitiale, 3) },
+    nouvelles_actions: nouvelles,
+    cout_souscription: cout,
+    actions_nouvelles_total: nTotal
+  };
+}
+
+function dilutionApport(actionsAnciennes, cours, prixEmission, valeurDeclaree, valeurReelle) {
+  const vals = [actionsAnciennes, cours, prixEmission, valeurDeclaree, valeurReelle];
+  if (!vals.every(v => v > 0)) throw new Error("Toutes les valeurs doivent être strictement positives.");
+  const nouvelles = valeurDeclaree / prixEmission;
+  const capitalisationAvant = actionsAnciennes * cours;
+  const valeurParAction = (capitalisationAvant + valeurReelle) / (actionsAnciennes + nouvelles);
+  const perte = cours - valeurParAction;
+  const part = nouvelles / (actionsAnciennes + nouvelles);
+  return {
+    actions_emises_a_l_apporteur: arrondi(nouvelles, 2),
+    part_apporteur: arrondi(part, 6),
+    valeur_par_action_apres: arrondi(valeurParAction, 4),
+    perte_par_action_pour_les_autres: arrondi(perte, 4),
+    perte_totale_autres_associes: arrondi(perte * actionsAnciennes, 3),
+    ecart_valeur_declaree_reelle: arrondi(valeurDeclaree - valeurReelle, 3)
+  };
+}
+
+function analyser(op, seuil) {
+  if (seuil === undefined) seuil = SEUIL_ECART_VALEUR;
+  const alertes = [];
+  const ajouter = (gravite, theme, message, ...refs) => alertes.push({ gravite, theme, message, references: refs });
+  const enNumeraire = op.liberation === "numeraire" || op.liberation === "mixte";
+  const enNature = op.liberation === "nature" || op.liberation === "mixte";
+  const incorporation = op.liberation === "incorporation";
+
+  if (op.forme === "SCI") {
+    ajouter(ATTENTION, "Forme",
+      "Le Code des sociétés commerciales vise les sociétés commerciales, et le DPS légal des articles 296 et suivants concerne la société anonyme. Pour une SCI, le droit de souscription dépend des statuts et du droit des sociétés civiles. Faire valider le régime par un juriste avant d'ouvrir la souscription.",
+      "CSC art. 296");
+  }
+  if (!op.age_tenue) {
+    if (op.forme === "SA") {
+      ajouter(BLOQUANT, "Décision",
+        "Aucune décision d'assemblée générale extraordinaire n'est enregistrée. L'augmentation de capital relève de cette assemblée.", "CSC art. 293");
+    } else if (op.forme === "SARL" && incorporation) {
+      ajouter(BLOQUANT, "Décision",
+        "Aucune décision des associés n'est enregistrée. L'augmentation par incorporation de réserves peut être décidée par les associés représentant plus de la moitié du capital.",
+        "CSC art. 133");
+    } else if (op.forme === "SARL") {
+      ajouter(BLOQUANT, "Décision",
+        "Aucune décision de l'assemblée extraordinaire n'est enregistrée. L'augmentation doit être décidée dans les conditions de l'article 131.", "CSC art. 131", "CSC art. 133");
+    }
+  }
+
+  if (op.forme === "SA" && !op.capital_libere) {
+    ajouter(BLOQUANT, "Capital",
+      "Le capital existant n'est pas intégralement libéré. Aucune action nouvelle ne peut être émise avant sa libération intégrale, à peine de nullité.", "CSC art. 295");
+  }
+
+  if (enNumeraire && (op.forme === "SA" || op.forme === "SARL")) {
+    const minimum = op.forme === "SA" ? DELAI_MIN_SA : DELAI_MIN_SARL;
+    const ref = op.forme === "SA" ? "CSC art. 301" : "CSC art. 131";
+    const jours = op.delai_souscription_jours;
+    if (jours === null || jours === undefined || Number.isNaN(jours)) {
+      ajouter(ATTENTION, "Délai", `Le délai de souscription n'est pas renseigné. Il doit être d'au moins ${minimum} jours.`, ref);
+    } else if (jours < minimum) {
+      ajouter(BLOQUANT, "Délai", `Le délai de souscription est de ${jours} jours, alors que le minimum est de ${minimum} jours.`, ref);
+    }
+    if (op.forme === "SA" && !op.publication_jort) {
+      ajouter(BLOQUANT, "Publicité",
+        "Les modalités du DPS (dates d'ouverture et de clôture, valeur des actions) doivent être annoncées au Journal officiel avant l'ouverture de la souscription. Le délai court à partir de cette annonce.",
+        "CSC art. 301", "CSC art. 302");
+    }
+    if (op.forme === "SA") {
+      ajouter(INFO, "Libération",
+        "Le quart de l'augmentation et la totalité de la prime d'émission doivent être libérés dans le délai de l'article 294, sinon la décision est réputée non écrite. Le texte français imprimé indique cinq ans, une note de l'Imprimerie officielle demande de lire six mois selon la version arabe : faire confirmer le délai. L'augmentation doit être réalisée dans les cinq ans de la décision.",
+        "CSC art. 294");
+      ajouter(INFO, "Formalités de souscription",
+        "Chaque souscription est constatée par un bulletin de souscription, et les versements par un certificat de l'établissement dépositaire des fonds.", "CSC art. 303 et 304");
+    }
+    if (op.forme === "SARL") {
+      ajouter(INFO, "Notification",
+        "Aviser chaque associé de l'ouverture de la souscription et du délai par lettre recommandée avec accusé de réception, ou par tout autre moyen laissant une trace écrite, et conserver la preuve. Les parts non souscrites sont d'abord réparties entre les autres associés sous vingt et un jours, puis la souscription peut être ouverte aux tiers par décision de l'assemblée.",
+        "CSC art. 131");
+      ajouter(INFO, "Fonds de souscription",
+        "Les fonds sont déposés auprès d'un établissement financier. Si l'augmentation n'est pas réalisée dans les six mois de l'assemblée, tout apporteur peut demander à retirer son apport.",
+        "CSC art. 134");
+    }
+  }
+
+  if (op.dps_supprime && !incorporation) {
+    if (op.forme === "SA") {
+      const manquants = [];
+      if (!op.rapport_conseil) manquants.push("le rapport du conseil");
+      if (!op.rapport_cac) manquants.push("le rapport des commissaires aux comptes");
+      if (manquants.length) {
+        ajouter(BLOQUANT, "Suppression du DPS",
+          "Il manque " + manquants.join(" et ") + ". L'assemblée doit approuver ces rapports à peine de nullité.", "CSC art. 300");
+      }
+      ajouter(INFO, "Suppression du DPS",
+        "La suppression ne peut pas résulter d'une clause des statuts. Elle exige une résolution de l'assemblée extraordinaire.", "CSC art. 296", "CSC art. 300");
+    } else if (op.forme === "SARL") {
+      ajouter(ATTENTION, "Suppression du DPS",
+        "Le Code des sociétés commerciales ne prévoit pas de suppression du droit de participation des associés de SARL à l'augmentation, et leurs droits fondamentaux ne peuvent être limités par les statuts ni par les assemblées. La souscription ne s'ouvre aux tiers qu'après le délai et la répartition entre associés de l'article 131. Faire valider par un juriste.",
+        "CSC art. 11", "CSC art. 131");
+    }
+  }
+
+  if (enNature) {
+    if (op.forme === "SA") {
+      if (!op.commissaire_apports) {
+        ajouter(BLOQUANT, "Apport en nature",
+          "Aucun commissaire aux apports n'est désigné. Il est nommé par ordonnance sur requête du président du tribunal de première instance, parmi les experts judiciaires.",
+          "CSC art. 306", "CSC art. 173");
+      } else {
+        ajouter(INFO, "Commissaire aux apports",
+          "Vérifier que le commissaire aux apports n'est pas dans un cas d'incompatibilité : l'apporteur lui-même, ses ascendants, descendants, collatéraux et alliés jusqu'au deuxième degré, ceux des administrateurs ou membres du directoire, leurs conjoints, et les autres cas de l'article 174. Son rapport décrit chaque apport, son mode d'évaluation et son intérêt pour la société.",
+          "CSC art. 173", "CSC art. 174");
+      }
+      if (!op.evaluation_approuvee) {
+        ajouter(BLOQUANT, "Apport en nature",
+          "L'assemblée n'a pas approuvé l'évaluation des apports. Cette approbation emporte la réalisation de l'augmentation.", "CSC art. 306");
+      }
+      if (op.evaluation_reduite_par_age && !op.accord_apporteur) {
+        ajouter(BLOQUANT, "Apport en nature",
+          "L'assemblée a réduit l'évaluation sans l'accord exprès de l'apporteur. Dans ce cas l'augmentation n'est pas réalisée.", "CSC art. 306");
+      }
+      ajouter(INFO, "Apport en nature",
+        "Pour les actions d'apport, la protection des autres actionnaires repose sur l'évaluation du commissaire aux apports et sur le vote de l'assemblée. Le DPS vise les souscriptions en numéraire. Les actions d'apport doivent être intégralement libérées dès leur émission.",
+        "CSC art. 306", "CSC art. 296");
+    } else if (op.forme === "SARL") {
+      if (!op.commissaire_apports) {
+        ajouter(BLOQUANT, "Apport en nature",
+          "Aucun commissaire aux apports n'est désigné. Il est désigné à l'unanimité des associés ou par ordonnance du président du tribunal, sauf si les associés décident à la majorité de s'en passer pour des apports ne dépassant pas 3 000 dinars chacun. À défaut, les associés sont solidairement responsables envers les tiers de la valeur attribuée pendant trois ans.",
+          "CSC art. 100", "CSC art. 135");
+      } else {
+        ajouter(INFO, "Apport en nature",
+          "Si la valeur retenue diffère de celle du commissaire, associés et souscripteurs sont solidairement responsables envers les tiers pendant trois ans.", "CSC art. 135");
+      }
+    }
+    if (op.valeur_declaree && op.valeur_expertisee) {
+      const ecart = (op.valeur_declaree - op.valeur_expertisee) / op.valeur_expertisee;
+      if (Math.abs(ecart) > seuil) {
+        const sens = ecart > 0 ? "supérieure" : "inférieure";
+        const suite = ecart > 0 ? " Les autres actionnaires sont dilués : chiffrer la perte avec dilution_apport_immeuble." : "";
+        ajouter(ATTENTION, "Évaluation",
+          `La valeur déclarée est ${sens} de ${Math.round(Math.abs(ecart) * 100)}% à la valeur expertisée (seuil d'alerte de la plateforme : ${Math.round(seuil * 100)}%).${suite}`,
+          "CSC art. 306");
+      }
+    }
+  }
+
+  if (op.apport_immeuble) {
+    if (op.immeuble_immatricule === null || op.immeuble_immatricule === undefined) {
+      ajouter(ATTENTION, "Droit foncier",
+        "Le statut d'immatriculation de l'immeuble n'est pas connu. Le vérifier à la Conservation de la propriété foncière et lire les droits inscrits sur le titre.", "CDR art. 308");
+    } else if (op.immeuble_immatricule) {
+      if (!op.acte_forme_legale) {
+        ajouter(BLOQUANT, "Droit foncier",
+          "L'acte d'apport doit respecter la forme prévue par la législation, sous peine de nullité quand l'apport comprend un immeuble immatriculé.", "CSC art. 3");
+      }
+      if (!op.inscription_livre_foncier_prevue) {
+        ajouter(BLOQUANT, "Droit foncier",
+          "Un droit réel sur immeuble immatriculé ne se constitue qu'à compter de son inscription au Livre Foncier. Tant que l'inscription n'est pas faite, la société n'est pas titulaire du droit.", "CDR art. 305");
+      }
+    } else {
+      ajouter(ATTENTION, "Droit foncier",
+        "L'immeuble n'est pas immatriculé, donc aucune inscription au Livre Foncier n'est possible. L'immatriculation est facultative et peut être requise par tout titulaire d'un droit réel. Envisager de la demander avant l'apport.",
+        "CDR art. 317 et 318");
+    }
+    if (op.immeuble_en_reserve_fonciere && !op.droit_priorite_purge) {
+      ajouter(ATTENTION, "Droit de priorité d'achat",
+        "L'immeuble est dans un périmètre de réserve foncière. L'État, une collectivité locale ou une agence peut avoir un droit de priorité d'achat, prénoté sur le titre, et un contrat conclu en violation peut être annulé. Vérifier si l'apport y est soumis et notifier le bénéficiaire. Ce droit est distinct du DPS.",
+        "CATU art. 42 à 44");
+    }
+    if (op.acquereur_etranger) {
+      if (!op.autorisation_gouverneur) {
+        ajouter(BLOQUANT, "Acquisition par un étranger",
+          "L'autorisation préalable du gouverneur est exigée. Sans elle, la vente est considérée comme nulle. Des exceptions existent, par exemple en zone touristique ou industrielle.",
+          "Décret du 4 juin 1957", "Loi 2005-40");
+      }
+      if (op.terre_agricole) {
+        ajouter(BLOQUANT, "Acquisition par un étranger", "Un étranger ne peut pas acquérir de terre agricole.", "Terres agricoles");
+      }
+    }
+  }
+
+  if (op.cession_titres_immobiliers) {
+    ajouter(INFO, "Fiscalité",
+      "La cession de titres portant sur des droits d'immeubles est traitée comme une vente d'immeubles pour les droits d'enregistrement. Le taux et le régime de la plus value sont à vérifier dans les textes en vigueur.",
+      "CDET art. 29", "Note commune 16/2011");
+  }
+
+  const t = op.taux_souscription;
+  if (op.forme === "SA" && enNumeraire && t !== null && t !== undefined && !Number.isNaN(t) && t < 1) {
+    if (t > 0.95) {
+      ajouter(INFO, "Souscription", "Le non souscrit est inférieur à 5 % : le conseil peut limiter l'augmentation au montant souscrit.", "CSC art. 299");
+    } else if (t >= 0.75 && op.limitation_prevue) {
+      ajouter(INFO, "Souscription",
+        "L'augmentation peut être limitée aux souscriptions reçues, car elles atteignent les trois quarts et la limitation était prévue.", "CSC art. 298");
+    } else {
+      ajouter(ATTENTION, "Souscription",
+        `Les souscriptions couvrent ${Math.round(t * 100)}% de l'augmentation. Sans limitation prévue, l'augmentation n'est pas réalisée, sauf redistribution aux actionnaires ou offre au public admise par l'assemblée.`,
+        "CSC art. 298", "CSC art. 299");
+    }
+  }
+
+  if (incorporation && op.forme === "SA") {
+    ajouter(INFO, "Incorporation de réserves",
+      "L'augmentation par incorporation de réserves, de bénéfices ou de primes d'émission ne donne pas lieu à souscription en numéraire. La majoration de la valeur nominale des actions exige l'unanimité, sauf s'il s'agit d'une incorporation de réserves, de bénéfices ou de primes d'émission.",
+      "CSC art. 292");
+  }
+  if (incorporation && op.forme === "SARL") {
+    ajouter(INFO, "Incorporation de réserves",
+      "L'augmentation par incorporation de réserves peut être décidée par les associés représentant plus de la moitié du capital.", "CSC art. 133");
+  }
+
+  if (op.forme === "SA" && op.appel_public_epargne && enNumeraire) {
+    ajouter(INFO, "Marché boursier",
+      "Les droits sont détachés à la date d'effet de l'augmentation et négociables pendant la période. Les actions nouvelles non assimilées sont négociables à la date fixée par l'avis de réalisation publié au bulletin de la Bourse. Les formalités propres au marché financier relèvent d'autres textes que le Code des sociétés commerciales et sont à vérifier.",
+      "BVMT droits de souscription", "CSC art. 296");
+  }
+
+  if (op.forme === "SA" && op.appel_public_epargne) {
+    ajouter(INFO, "Minoritaires",
+      "Les actionnaires disposent de recours : questions écrites (3 % du capital), expertise de gestion et annulation de décisions prises dans l'intérêt de quelques actionnaires ou d'un tiers (10 %). Le rachat des petits porteurs de l'article 290 ter ne s'applique pas aux sociétés faisant appel public à l'épargne. Conserver les notifications, les rapports et les calculs de dilution.",
+      "CSC art. 284 bis", "CSC art. 290", "CSC art. 290 bis");
+  } else if (op.forme === "SA") {
+    ajouter(INFO, "Minoritaires",
+      "Les actionnaires disposent de recours : questions écrites (5 % du capital), expertise de gestion et annulation de décisions prises dans l'intérêt de quelques actionnaires ou d'un tiers (10 %), et rachat de leurs titres par ceux qui détiennent 5 % au plus. Conserver les notifications, les rapports et les calculs de dilution.",
+      "CSC art. 284 bis", "CSC art. 290", "CSC art. 290 bis", "CSC art. 290 ter");
+  }
+  return alertes.sort((a, b) => ORDRE[a.gravite] - ORDRE[b.gravite]);
+}
+if (typeof module !== "undefined") {
+  module.exports = { terp, valeurDroit, valeurDroitPeriode, coursActionNouvelle, simulationAssocie, dilutionApport, analyser, validerOperation, REFERENCES };
+}
+</script>
+
+<script id="app">
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const nf = (d) => new Intl.NumberFormat("fr-FR", { minimumFractionDigits: d, maximumFractionDigits: d });
+  const fmt = (x, d = 2) => nf(d).format(x);
+  const pct = (x, d = 2) => nf(d).format(x * 100) + " %";
+  const montant = (x) => fmt(x, Math.abs(x) >= 1000 ? 0 : 3);
+  const carte = (k, v, u, couleur) =>
+    `<div class="metric ${couleur || ""}"><span class="k">${k}</span><span class="v">${v}${u ? ` <span class="u">${u}</span>` : ""}</span></div>`;
+  const num = (id) => { const v = $(id).value.trim(); return v === "" ? NaN : Number(v); };
+  const numOuNull = (id) => { const v = $(id).value.trim(); return v === "" ? null : Number(v); };
+
+  /* ---------- Onglets ---------- */
+  const TABS = ["souscription", "apport", "juridique", "assistant"];
+  function ouvrirOnglet(nom) {
+    if (!TABS.includes(nom)) nom = "souscription";
+    TABS.forEach((t) => {
+      $("p-" + t).hidden = t !== nom;
+      $("t-" + t).setAttribute("aria-selected", String(t === nom));
+    });
+  }
+  TABS.forEach((t) => $("t-" + t).addEventListener("click", () => ouvrirOnglet(t)));
+  const depuisHash = () => ouvrirOnglet((location.hash || "").replace("#", ""));
+  window.addEventListener("hashchange", depuisHash);
+
+  /* ---------- Onglet 1 : droit de souscription ---------- */
+  function afficherErreur(id, message) { const e = $(id); e.hidden = !message; e.textContent = message || ""; }
+
+  function renderSouscription() {
+    const op = {
+      actions_anciennes: num("f-N"), cours_cum: num("f-P"), prix_souscription: num("f-S"),
+      parite_nouvelles: num("f-p"), parite_anciennes: num("f-q"),
+      difference_jouissance: numOuNull("f-D") || 0
+    };
+    try {
+      validerOperation(op);
+      const sim = simulationAssocie(op, num("f-det"), numOuNull("f-marche"));
+      const ligne = numOuNull("f-ligne");
+      const droitPeriode = ligne === null ? null : valeurDroitPeriode(op, ligne);
+      afficherErreur("f-erreur", "");
+      $("f-out").hidden = false;
+      $("f-kv").innerHTML =
+        carte("Cours de référence après détachement", fmt(sim.cours_theorique_ex_droit, 3), "DT") +
+        carte("Cours théorique du droit", fmt(sim.valeur_droit_theorique, 3), "DT", "gold") +
+        carte("Actions nouvelles si tout est exercé", fmt(sim.actions_nouvelles_total, 0), "", "blue") +
+        carte("Votre participation avant l'opération", pct(sim.participation_initiale));
+      let details =
+        `<dt>Action nouvelle souscrite au détachement (cours de référence moins D)</dt><dd>${fmt(coursActionNouvelle(sim.cours_theorique_ex_droit, op.difference_jouissance), 3)} DT</dd>`;
+      if (droitPeriode !== null) {
+        details +=
+          `<dt>Droit de souscription pendant la période, ligne principale à ${fmt(ligne, 3)} DT</dt><dd>${fmt(droitPeriode, 3)} DT</dd>` +
+          `<dt>Action nouvelle pendant la période (cours de la ligne moins D)</dt><dd>${fmt(coursActionNouvelle(ligne, op.difference_jouissance), 3)} DT</dd>`;
+      }
+      $("f-kv2").innerHTML = details;
+      const g = { exercer: sim.exercer.gain_ou_perte, vendre: sim.vendre.gain_ou_perte, expirer: sim.expirer.gain_ou_perte };
+      const egal = Math.abs(g.exercer - g.vendre) < 0.005;
+      const meilleur = egal ? "both" : (g.exercer > g.vendre ? "exercer" : "vendre");
+      const ligneTab = (cle, nom, p, gain) => {
+        const best = meilleur === cle || (meilleur === "both" && cle !== "expirer");
+        return `<tr class="${best ? "best" : ""}"><td>${nom}${best ? '<span class="tag">Meilleur</span>' : ""}</td>` +
+          `<td class="num">${pct(p)}</td><td class="num ${gain < -0.0005 ? "neg" : ""}">${montant(gain)}</td></tr>`;
+      };
+      $("f-body").innerHTML =
+        ligneTab("exercer", "Exercer les droits", sim.exercer.participation_finale, g.exercer) +
+        ligneTab("vendre", "Vendre les droits", sim.vendre.participation_finale, g.vendre) +
+        ligneTab("expirer", "Laisser expirer", sim.expirer.participation_finale, g.expirer);
+      let verdict;
+      if (egal) verdict = `Exercer et vendre les droits donnent le même résultat à ce prix. Laisser expirer fait perdre ${montant(-g.expirer)} DT.`;
+      else if (meilleur === "vendre") verdict = `Vendre les droits rapporte ${montant(g.vendre - g.exercer)} DT de plus que les exercer.`;
+      else verdict = `Exercer rapporte ${montant(g.exercer - g.vendre)} DT de plus que vendre les droits, car le droit est coté sous sa valeur théorique.`;
+      $("f-verdict").textContent = verdict;
+      let cash = `Exercer demande de payer ${montant(sim.cout_souscription)} DT pour souscrire ${fmt(sim.nouvelles_actions, 0)} actions nouvelles. Vendre ou laisser expirer réduit votre participation à ${pct(sim.vendre.participation_finale)}.`;
+      if (sim.valeur_droit_theorique <= 0) cash += " Le prix d'émission, majoré de la différence de jouissance, atteint le cours : le droit n'a pas de valeur théorique positive.";
+      $("f-cash").textContent = cash;
+    } catch (e) {
+      $("f-out").hidden = true;
+      afficherErreur("f-erreur", e.message);
+    }
+  }
+
+  /* ---------- Onglet 2 : apport d'immeuble ---------- */
+  function renderApport() {
+    try {
+      const r = dilutionApport(num("a-N"), num("a-cours"), num("a-prix"), num("a-decl"), num("a-reel"));
+      afficherErreur("a-erreur", "");
+      $("a-out").hidden = false;
+      const p = r.part_apporteur * 100;
+      $("a-share").innerHTML = `<span class="apporteur" style="width:${p}%"></span><span class="autres" style="width:${100 - p}%"></span>`;
+      $("a-legend").innerHTML =
+        `<span><i class="sw" style="background:var(--accent)"></i>Apporteur ${pct(r.part_apporteur)}</span>` +
+        `<span><i class="sw" style="background:var(--muted);opacity:.45"></i>Autres associés ${pct(1 - r.part_apporteur)}</span>`;
+      $("a-metrics").innerHTML =
+        carte("Actions émises à l'apporteur", fmt(r.actions_emises_a_l_apporteur, 0), "", "blue") +
+        carte("Part de l'apporteur", pct(r.part_apporteur)) +
+        carte("Perte par action des autres", fmt(r.perte_par_action_pour_les_autres, 3), "DT", r.perte_totale_autres_associes > 0.005 ? "red" : "") +
+        carte("Perte totale des autres associés", montant(r.perte_totale_autres_associes), "DT", r.perte_totale_autres_associes > 0.005 ? "red" : "");
+      $("a-kv").innerHTML =
+        `<dt>Valeur par action après l'opération</dt><dd>${fmt(r.valeur_par_action_apres, 3)} DT</dd>` +
+        `<dt>Écart entre valeur déclarée et réelle</dt><dd>${montant(r.ecart_valeur_declaree_reelle)} DT</dd>`;
+      $("a-decision").className = "decision " + (r.perte_totale_autres_associes > 0.005 ? "no" : "ok");
+      $("a-verdict").textContent = r.perte_totale_autres_associes > 0.005
+        ? `Les autres associés perdent ${montant(r.perte_totale_autres_associes)} DT à cause de la surévaluation.`
+        : "L'immeuble est évalué à sa valeur réelle : les autres associés ne perdent rien.";
+    } catch (e) {
+      $("a-out").hidden = true;
+      afficherErreur("a-erreur", e.message);
+    }
+  }
+  $("a-vers-juridique").addEventListener("click", () => {
+    $("j-vdecl").value = $("a-decl").value;
+    $("j-vexp").value = $("a-reel").value;
+    $("j-liberation").value = "nature";
+    $("j-immeuble").checked = true;
+    renderJuridique();
+    ouvrirOnglet("juridique");
+  });
+
+  /* ---------- Onglet 3 : contrôle juridique ---------- */
+  const CHAMPS = [
+    ["j-forme", "forme", "sel"], ["j-liberation", "liberation", "sel"], ["j-age", "age_tenue", "chk"],
+    ["j-capital", "capital_libere", "chk"], ["j-ape", "appel_public_epargne", "chk"],
+    ["j-jort", "publication_jort", "chk"], ["j-delai", "delai_souscription_jours", "num"],
+    ["j-dps", "dps_supprime", "chk"], ["j-rcons", "rapport_conseil", "chk"], ["j-rcac", "rapport_cac", "chk"],
+    ["j-taux", "taux_souscription", "pct"], ["j-limit", "limitation_prevue", "chk"],
+    ["j-comm", "commissaire_apports", "chk"], ["j-eval", "evaluation_approuvee", "chk"],
+    ["j-reduite", "evaluation_reduite_par_age", "chk"], ["j-accord", "accord_apporteur", "chk"],
+    ["j-vdecl", "valeur_declaree", "num"], ["j-vexp", "valeur_expertisee", "num"],
+    ["j-immeuble", "apport_immeuble", "chk"], ["j-immat", "immeuble_immatricule", "tri"],
+    ["j-acte", "acte_forme_legale", "chk"], ["j-inscr", "inscription_livre_foncier_prevue", "chk"],
+    ["j-reserve", "immeuble_en_reserve_fonciere", "chk"], ["j-purge", "droit_priorite_purge", "chk"],
+    ["j-etranger", "acquereur_etranger", "chk"], ["j-autor", "autorisation_gouverneur", "chk"],
+    ["j-agri", "terre_agricole", "chk"], ["j-cession", "cession_titres_immobiliers", "chk"]
+  ];
+  const EXEMPLE = {
+    forme: "SA", liberation: "nature", age_tenue: true, capital_libere: true, dps_supprime: true, rapport_conseil: true, rapport_cac: false,
+    commissaire_apports: true, evaluation_approuvee: true, valeur_declaree: 5000000, valeur_expertisee: 3500000,
+    apport_immeuble: true, immeuble_immatricule: true, acte_forme_legale: true, inscription_livre_foncier_prevue: false
+  };
+  const VIDE = { forme: "SA", liberation: "numeraire" };
+
+  function lireOperation() {
+    const op = {};
+    CHAMPS.forEach(([id, cle, type]) => {
+      const el = $(id);
+      if (type === "chk") op[cle] = el.checked;
+      else if (type === "sel") op[cle] = el.value;
+      else if (type === "num") op[cle] = numOuNull(id);
+      else if (type === "pct") { const v = numOuNull(id); op[cle] = v === null ? null : v / 100; }
+      else if (type === "tri") op[cle] = el.value === "" ? null : el.value === "oui";
+    });
+    return op;
+  }
+  function ecrireOperation(op) {
+    CHAMPS.forEach(([id, cle, type]) => {
+      const el = $(id), v = op[cle];
+      if (type === "chk") el.checked = !!v;
+      else if (type === "sel") el.value = v || el.options[0].value;
+      else if (type === "num") el.value = (v === null || v === undefined) ? "" : v;
+      else if (type === "pct") el.value = (v === null || v === undefined) ? "" : v * 100;
+      else if (type === "tri") el.value = v === null || v === undefined ? "" : (v ? "oui" : "non");
+    });
+  }
+  function visibilite(op) {
+    const num_ = op.liberation === "numeraire" || op.liberation === "mixte", nat = op.liberation === "nature" || op.liberation === "mixte", sa = op.forme === "SA";
+    $("gr-capital").hidden = !sa;
+    $("gr-dps").hidden = op.liberation === "incorporation";
+    $("gr-souscription").hidden = !(num_ && (sa || op.forme === "SARL"));
+    $("gr-jort").hidden = !sa;
+    $("gr-rapports").hidden = !(op.dps_supprime && sa);
+    $("gr-nature").hidden = !nat;
+    $("gr-sa-nature").hidden = !sa;
+    $("gr-accord").hidden = !op.evaluation_reduite_par_age;
+    $("gr-immeuble").hidden = !op.apport_immeuble;
+    $("gr-immat-oui").hidden = op.immeuble_immatricule !== true;
+    $("gr-purge").hidden = !op.immeuble_en_reserve_fonciere;
+    $("gr-etranger").hidden = !op.acquereur_etranger;
+    $("j-taux").closest(".field").hidden = !sa;
+    $("j-limit").closest(".chk").hidden = !sa;
+  }
+
+  const refsOuvertes = new Set();
+  const LIBELLE_STATUT = { officiel: "Édition officielle du CSC, IORT 2022", bvmt: "Document de la Bourse de Tunis, mars 2009", lu: "Texte lu en ligne", secondaire: "Source secondaire", "a verifier": "À vérifier" };
+
+  function renderJuridique() {
+    const op = lireOperation();
+    visibilite(op);
+    const alertes = analyser(op);
+    const n = { BLOQUANT: 0, ATTENTION: 0, INFO: 0 };
+    alertes.forEach((a) => n[a.gravite]++);
+    $("j-resume").textContent = n.BLOQUANT > 0
+      ? "Le dossier ne peut pas avancer en l'état."
+      : (n.ATTENTION > 0 ? "Aucun point bloquant, des points à vérifier." : "Aucun point bloquant.");
+    $("j-decision").className = "decision " + (n.BLOQUANT > 0 ? "no" : (n.ATTENTION > 0 ? "warn" : "ok"));
+    $("j-counts").innerHTML =
+      carte("Bloquant" + (n.BLOQUANT > 1 ? "s" : ""), n.BLOQUANT, "", "red") +
+      carte("Attention" + (n.ATTENTION > 1 ? "s" : ""), n.ATTENTION, "", "gold") +
+      carte("Information" + (n.INFO > 1 ? "s" : ""), n.INFO, "", "blue");
+    const liste = $("j-liste");
+    liste.textContent = "";
+    if (!alertes.length) { const p = document.createElement("p"); p.className = "empty"; p.textContent = "Aucune alerte."; liste.appendChild(p); return; }
+    alertes.forEach((a, i) => {
+      const bloc = document.createElement("div"); bloc.className = "alert " + a.gravite;
+      const tete = document.createElement("div"); tete.className = "alert-head";
+      const sev = document.createElement("span"); sev.className = "sev " + a.gravite; sev.textContent = a.gravite;
+      const th = document.createElement("span"); th.className = "theme"; th.textContent = a.theme;
+      tete.append(sev, th);
+      const msg = document.createElement("p"); msg.textContent = a.message;
+      const refs = document.createElement("div"); refs.className = "refs";
+      const detail = document.createElement("div");
+      a.references.forEach((r) => {
+        const cle = i + "|" + r;
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "ref"; b.textContent = r;
+        const ouvert = refsOuvertes.has(cle);
+        b.setAttribute("aria-expanded", String(ouvert));
+        const d = document.createElement("p"); d.className = "refdetail"; d.hidden = !ouvert;
+        const info = REFERENCES[r];
+        const strong = document.createElement("b"); strong.textContent = r + " : ";
+        d.append(strong, document.createTextNode(info[0] + " (" + LIBELLE_STATUT[info[1]] + ")"));
+        b.addEventListener("click", () => {
+          const open = b.getAttribute("aria-expanded") !== "true";
+          b.setAttribute("aria-expanded", String(open)); d.hidden = !open;
+          if (open) refsOuvertes.add(cle); else refsOuvertes.delete(cle);
+        });
+        refs.appendChild(b); detail.appendChild(d);
+      });
+      bloc.append(tete, msg, refs, detail);
+      liste.appendChild(bloc);
+    });
+  }
+  $("j-exemple").addEventListener("click", () => { ecrireOperation(EXEMPLE); refsOuvertes.clear(); renderJuridique(); });
+  $("j-vide").addEventListener("click", () => { ecrireOperation(VIDE); refsOuvertes.clear(); renderJuridique(); });
+
+  /* ---------- Onglet 4 : assistant juridique ---------- */
+  const KB = [{"id": "dps", "mots": ["dps", "droit preferentiel", "preferentiel", "renoncer", "renonciation", "cessible", "negociable"], "texte": ["Dans une société anonyme, chaque actionnaire a un droit de préférence à la souscription des actions de numéraire, proportionnel au montant de ses actions. Toute clause contraire est réputée non avenue.", "Pendant la souscription, le droit est négociable lorsqu'il est détaché d'actions négociables, sinon cessible dans les mêmes conditions que l'action. Chaque actionnaire peut y renoncer à titre individuel."], "refs": ["CSC art. 296"]}, {"id": "suppression", "mots": ["suppression", "supprimer", "supprime", "sans dps", "exclure le droit", "retirer le droit"], "texte": ["L'assemblée générale extraordinaire qui décide ou autorise l'augmentation peut supprimer le droit préférentiel pour tout ou partie de l'augmentation.", "Elle doit approuver, à peine de nullité de l'augmentation, le rapport du conseil d'administration (ou du directoire) et celui des commissaires aux comptes. Une clause des statuts ne suffit pas : la suppression exige une résolution de l'assemblée extraordinaire."], "refs": ["CSC art. 300", "CSC art. 296"]}, {"id": "delai", "mots": ["delai", "jours", "duree de souscription", "ouverture", "cloture", "quinze", "vingt et un", "21 jours", "15 jours"], "texte": ["SA : le délai d'exercice du droit de souscription ne peut jamais être inférieur à quinze jours. Il court à partir de l'annonce au Journal officiel du droit préférentiel, des dates d'ouverture et de clôture et de la valeur des actions à l'émission.", "SARL : au moins vingt et un jours à compter de l'ouverture du droit de souscription, avec un avis écrit à chaque associé."], "refs": ["CSC art. 301", "CSC art. 131"]}, {"id": "publicite", "mots": ["publicite", "journal officiel", "jort", "annonce", "publication", "greffe", "registre"], "texte": ["SA : les modalités du droit (dates d'ouverture et de clôture, valeur des actions) sont annoncées au Journal officiel, et la société accomplit avant l'ouverture de la souscription les formalités de publicité des articles 163 et suivants. La décision d'augmentation est publiée selon l'article 163."], "refs": ["CSC art. 301", "CSC art. 302", "CSC art. 293"]}, {"id": "liberation", "mots": ["libere", "liberation", "liberer", "quart", "prime d'emission", "295", "294", "capital existant"], "texte": ["Le capital social doit être intégralement libéré avant toute émission de nouvelles actions, à peine de nullité (art. 295).", "Pour l'augmentation, le quart du montant et la totalité de la prime d'émission doivent être libérés dans le délai de l'article 294, sinon la décision est réputée non écrite. Le texte français imprimé indique cinq ans, et une note de l'Imprimerie officielle demande de lire six mois selon la version arabe : faites confirmer ce délai. L'augmentation elle-même doit être réalisée dans les cinq ans de la décision."], "refs": ["CSC art. 295", "CSC art. 294"]}, {"id": "decision", "mots": ["assemblee", "decision", "quorum", "majorite", "delegation", "deleguer", "extraordinaire", "trois quarts des associes"], "texte": ["SA : l'augmentation est décidée par l'assemblée générale extraordinaire, dans les conditions de la loi. Elle peut déléguer au conseil les pouvoirs de la réaliser, mais une clause des statuts qui donne au conseil le pouvoir de décider l'augmentation est réputée non avenue.", "SARL : modification des statuts par les associés représentant les trois quarts du capital, ou selon le quorum et la majorité prévus aux statuts (assemblée en présence de 50 % du capital, puis une seconde après 60 jours en présence d'un tiers, décision à la majorité des deux tiers des présents)."], "refs": ["CSC art. 293", "CSC art. 294", "CSC art. 131"]}, {"id": "apport", "mots": ["apport", "nature", "commissaire aux apports", "evaluation", "expert", "apporteur", "evalue"], "texte": ["SA : un ou plusieurs commissaires aux apports sont désignés par ordonnance sur requête du président du tribunal de première instance, parmi les experts judiciaires. L'assemblée extraordinaire délibère sur l'évaluation. Si elle l'approuve, elle déclare l'augmentation réalisée. Si elle la réduit, l'accord exprès de l'apporteur est requis, sinon l'augmentation n'est pas réalisée. Les actions d'apport sont libérées dès leur émission.", "Le commissaire ne peut pas être l'apporteur, ni ses proches jusqu'au deuxième degré, ni ceux des administrateurs, entre autres cas d'incompatibilité.", "SARL : évaluation par un commissaire aux apports, sauf si les associés décident à la majorité de s'en passer pour des apports de 3 000 dinars au plus. Sans commissaire, ou si la valeur retenue diffère de la sienne, associés et souscripteurs sont solidairement responsables envers les tiers pendant trois ans."], "refs": ["CSC art. 306", "CSC art. 173", "CSC art. 174", "CSC art. 100", "CSC art. 135"]}, {"id": "immeuble", "mots": ["immeuble", "immatricule", "immatriculation", "livre foncier", "titre foncier", "inscription", "notaire", "acte d'apport"], "texte": ["Si l'apport comprend un immeuble immatriculé, l'acte doit être rédigé selon la législation en vigueur, sous peine de nullité (CSC art. 3).", "Un droit réel sur un immeuble immatriculé ne se constitue qu'à compter de son inscription au Livre Foncier : tant qu'elle n'est pas faite, la société n'est pas titulaire du droit. Les droits existants sont inscrits sur le titre. Si l'immeuble n'est pas immatriculé, l'immatriculation est facultative et tout titulaire d'un droit réel peut la demander.", "Les articles du Code des droits réels ont été lus sur un site de documentation juridique : à confronter au Journal officiel."], "refs": ["CSC art. 3", "CDR art. 305", "CDR art. 308", "CDR art. 317 et 318"]}, {"id": "reserve", "mots": ["reserve fonciere", "priorite d'achat", "catu", "preemption", "perimetre"], "texte": ["Dans un périmètre de réserve foncière, l'État, une collectivité locale ou une agence peut avoir un droit de priorité d'achat, prénoté sur le titre. Un contrat conclu en violation de ce droit peut être annulé.", "Ce droit est distinct du droit préférentiel de souscription. À faire valider : son application à un apport en société, et pas seulement à une vente."], "refs": ["CATU art. 42 à 44"]}, {"id": "etranger", "mots": ["etranger", "etrangere", "gouverneur", "agricole", "non resident"], "texte": ["L'acquisition d'un immeuble par un étranger exige l'autorisation préalable du gouverneur (décret du 4 juin 1957), avec des exceptions, par exemple en zone touristique ou industrielle (loi 2005-40). La terre agricole lui est fermée selon la source consultée.", "Ces points viennent de sources secondaires : à faire valider par un juriste tunisien."], "refs": ["Décret du 4 juin 1957", "Loi 2005-40", "Terres agricoles"]}, {"id": "insuffisance", "mots": ["insuffisant", "insuffisante", "non souscrit", "non souscrites", "reductible", "redistribution", "trois quarts", "limitation", "cinq pour cent", "souscriptions incompletes"], "texte": ["Si les souscriptions n'atteignent pas la totalité de l'augmentation : elle peut être limitée au montant souscrit si celui-ci atteint les trois quarts et si l'assemblée l'a prévu expressément ; les actions non souscrites peuvent être redistribuées entre actionnaires, sauf décision contraire, ou offertes au public si l'assemblée l'a admis.", "Le conseil peut toujours limiter d'office l'augmentation lorsque le non souscrit représente moins de 5 %. Sinon l'augmentation n'est pas réalisée.", "À titre réductible, les actions non souscrites vont aux actionnaires qui ont demandé plus que leur droit, proportionnellement à leurs parts et dans la limite de leurs demandes."], "refs": ["CSC art. 297", "CSC art. 298", "CSC art. 299"]}, {"id": "minoritaires", "mots": ["minoritaire", "minoritaires", "recours", "annulation", "expertise", "questions ecrites", "rachat", "retrait"], "texte": ["Questions écrites au conseil au moins deux fois par an : à partir de 5 % du capital (3 % si la société fait appel public à l'épargne, ou participation d'un million de dinars). Réponse écrite due dans le mois.", "À partir de 10 % du capital : annulation des décisions prises dans l'intérêt de quelques actionnaires ou d'un tiers (action prescrite par un an) et expertise de gestion.", "Hors appel public à l'épargne, les actionnaires détenant 5 % au plus peuvent imposer le rachat de leurs titres à un prix fixé par expertise."], "refs": ["CSC art. 284 bis", "CSC art. 290", "CSC art. 290 bis", "CSC art. 290 ter"]}, {"id": "sarl", "mots": ["sarl", "responsabilite limitee", "parts sociales"], "texte": ["SARL : chaque associé participe à l'augmentation proportionnellement à sa part, dans un délai d'au moins 21 jours, après avis écrit. Les parts non souscrites sont réparties entre les autres associés sous 21 jours, puis la souscription peut être ouverte aux tiers par décision de l'assemblée. Nul associé ne peut être obligé d'augmenter son engagement.", "Les fonds sont déposés auprès d'un établissement financier. Si l'augmentation n'est pas réalisée dans les six mois de l'assemblée, tout apporteur peut demander à retirer son apport.", "Le Code ne prévoit pas de suppression du droit de participation des associés de SARL, et leurs droits fondamentaux ne peuvent être limités."], "refs": ["CSC art. 131", "CSC art. 134", "CSC art. 11", "CSC art. 133"]}, {"id": "sci", "mots": ["sci", "societe civile"], "texte": ["Le Code des sociétés commerciales vise les sociétés commerciales, et le droit préférentiel des articles 296 et suivants concerne la société anonyme. Pour une SCI, le droit de souscription dépend des statuts et du droit des sociétés civiles, qui n'est pas dans les textes lus. Faites valider le régime par un juriste avant d'ouvrir la souscription."], "refs": ["CSC art. 296"]}, {"id": "valeur", "mots": ["valeur du droit", "valeur d'un droit", "cours theorique", "formule", "calculer", "calcul", "detachement", "bvmt", "bourse de tunis"], "texte": ["Méthode de la Bourse de Tunis. Au détachement : valeur du droit Ds = N / (A + N) x (C - PE - D), avec A le nombre d'actions anciennes, N le nombre d'actions nouvelles, C le cours de clôture de la veille, PE le prix d'émission et D la différence de jouissance en dividende. Le cours de référence de l'action devient C moins Ds.", "Pendant la période de souscription : Ds = N / A x (C - D - PE), avec C le cours de référence de la ligne principale. Une action nouvelle non assimilée vaut C - D.", "L'onglet Droit de souscription fait ce calcul pour votre opération."], "refs": ["BVMT droits de souscription"]}, {"id": "jouissance", "mots": ["jouissance", "dividende"], "texte": ["La différence de jouissance (D) est le dividende que les actions nouvelles ne touchent pas, par rapport aux anciennes. Elle réduit la valeur du droit, car les actions nouvelles valent moins que les anciennes jusqu'à leur assimilation. À défaut d'information, la Bourse retient le dividende de l'année précédente. Si les actions nouvelles sont assimilées dès l'émission, D vaut 0."], "refs": ["BVMT droits de souscription"]}, {"id": "choix", "mots": ["exercer", "vendre", "expirer", "laisser expirer", "que faire de mes droits", "garder mes droits"], "texte": ["Au cours théorique, exercer et vendre ses droits donnent le même résultat financier : la différence tient à la participation. En exerçant, on garde son pourcentage du capital. En vendant, on est dilué. Laisser expirer fait perdre la valeur des droits.", "Vendre est préférable si le droit est coté au-dessus de sa valeur théorique, exercer s'il est coté en dessous. L'onglet Droit de souscription compare les trois choix, avant frais de courtage et fiscalité."], "refs": ["BVMT droits de souscription"]}, {"id": "dilution", "mots": ["dilution", "surevalue", "surevaluation", "perte des autres", "apport d'immeuble", "valeur declaree"], "texte": ["Quand l'immeuble est apporté pour une valeur déclarée supérieure à sa valeur réelle, l'apporteur reçoit plus d'actions que son bien ne le justifie, et les autres associés portent la différence. Actions émises = valeur déclarée / prix d'émission. Valeur par action après l'opération = (capitalisation avant + valeur réelle) / (actions anciennes + actions émises).", "L'onglet Apport d'immeuble chiffre la perte. La plateforme alerte à partir de 10 % d'écart entre valeur déclarée et valeur expertisée : c'est un choix de la plateforme, pas un seuil légal."], "refs": ["CSC art. 306"]}, {"id": "fiscalite", "mots": ["fiscal", "fiscalite", "impot", "enregistrement", "plus-value", "plus value", "cdet", "taxe"], "texte": ["La cession de titres portant sur des droits d'immeubles est traitée comme une vente d'immeubles pour les droits d'enregistrement. Le taux et le régime de la plus-value sont à vérifier dans les textes en vigueur : la note commune consultée date de 2011.", "Les calculs de la plateforme ne tiennent pas compte de la fiscalité ni des frais de courtage."], "refs": ["CDET art. 29", "Note commune 16/2011"]}, {"id": "cotee", "mots": ["cotee", "cote", "appel public", "bourse", "avis de realisation", "cmf", "marche financier", "assimilation"], "texte": ["Pour une société cotée, les droits sont détachés à la date d'effet de l'augmentation et négociables pendant la période de souscription. Les actions nouvelles non assimilées sont négociables à la date fixée par l'avis de réalisation publié au bulletin de la Bourse.", "Les formalités propres au marché financier (Conseil du marché financier, Bourse) relèvent de textes absents des sources lues : à vérifier. Les seuils de recours des actionnaires sont plus bas (3 % pour les questions écrites)."], "refs": ["BVMT droits de souscription", "CSC art. 284 bis"]}, {"id": "incorporation", "mots": ["incorporation", "reserves", "gratuite", "gratuites", "bonus"], "texte": ["L'augmentation par incorporation de réserves, de bénéfices ou de primes d'émission ne donne pas lieu à souscription en numéraire. En SA, la majoration de la valeur nominale exige l'unanimité, sauf s'il s'agit d'une incorporation de réserves, de bénéfices ou de primes. En SARL, elle peut être décidée par les associés représentant plus de la moitié du capital.", "Cet outil ne calcule pas de valeur de droit pour ce cas."], "refs": ["CSC art. 292", "CSC art. 133"]}, {"id": "dossier", "mots": ["mon dossier", "dossier", "alerte", "alertes", "bloquant", "bloquants", "corriger", "a corriger", "conforme", "conformite"], "texte": [], "refs": []}, {"id": "fiabilite", "mots": ["fiable", "fiabilite", "source", "sources", "officiel", "edition", "avocat", "avis juridique"], "texte": ["Les articles du Code des sociétés commerciales ont été lus dans l'édition officielle de l'Imprimerie officielle (mise à jour du 10 février 2022). Les formules viennent du document de la Bourse de Tunis (mars 2009). Le Code des droits réels, le CATU et le CDET ont été lus sur des sites de documentation juridique et restent à confronter au Journal officiel.", "Les réponses de l'assistant sont indicatives et ne remplacent pas l'avis d'un avocat ou d'un notaire tunisien."], "refs": []}];
+  const FALLBACK = "Je n'ai pas trouvé de réponse précise dans les textes lus. Précisez le sujet : droit préférentiel de souscription, suppression, délai, publicité, capital libéré, apport en nature, immeuble, minoritaires, SARL, SCI, valeur du droit, fiscalité, ou « mon dossier ». Hors de ces sujets, consultez un avocat ou un notaire tunisien.";
+  const MODELE_API = "claude-haiku-5-5";
+  const norm = (s) => s.toLowerCase().replace(/[’‘]/g, "'").normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const echapper = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  function motPresent(q, mot) {
+    if (mot.length <= 4) return new RegExp("(^|[^a-z0-9])" + echapper(mot) + "([^a-z0-9]|$)").test(q);
+    return q.includes(mot);
+  }
+  function chercher(question) {
+    const q = norm(question);
+    const notes = KB.map((t) => ({ t, score: t.mots.reduce((s, m) => s + (motPresent(q, norm(m)) ? m.length : 0), 0) }))
+      .filter((x) => x.score > 0).sort((a, b) => b.score - a.score);
+    return notes.filter((x, i) => i === 0 || (i === 1 && x.score >= 0.6 * notes[0].score)).map((x) => x.t);
+  }
+  function resumeDossier() {
+    const alertes = analyser(lireOperation());
+    const n = { BLOQUANT: 0, ATTENTION: 0, INFO: 0 };
+    alertes.forEach((a) => n[a.gravite]++);
+    const s = (k) => (k > 1 ? "s" : "");
+    const paragraphes = [`Votre dossier (onglet Contrôle juridique) compte ${n.BLOQUANT} point${s(n.BLOQUANT)} bloquant${s(n.BLOQUANT)}, ${n.ATTENTION} point${s(n.ATTENTION)} d'attention et ${n.INFO} information${s(n.INFO)}.`];
+    const refs = [];
+    alertes.filter((a) => a.gravite !== INFO).forEach((a) => {
+      paragraphes.push((a.gravite === BLOQUANT ? "À corriger" : "À vérifier") + " · " + a.theme + " : " + a.message);
+      a.references.forEach((r) => { if (!refs.includes(r)) refs.push(r); });
+    });
+    if (!n.BLOQUANT && !n.ATTENTION) paragraphes.push("Aucun point bloquant ni point d'attention. Conservez les notifications, les rapports et les calculs de dilution.");
+    return { paragraphes, refs: refs.slice(0, 8) };
+  }
+  function reponseLocale(question) {
+    const sujets = chercher(question);
+    if (!sujets.length) return { paragraphes: [FALLBACK], refs: [] };
+    const paragraphes = [], refs = [];
+    sujets.forEach((sujet) => {
+      const r = sujet.id === "dossier" ? resumeDossier() : { paragraphes: sujet.texte, refs: sujet.refs };
+      paragraphes.push(...r.paragraphes);
+      r.refs.forEach((x) => { if (!refs.includes(x)) refs.push(x); });
+    });
+    return { paragraphes, refs };
+  }
+
+  const chat = $("as-chat");
+  const historique = [];
+  const defiler = () => { chat.scrollTop = chat.scrollHeight; };
+  function bulle(role) { const d = document.createElement("div"); d.className = "msg " + role; chat.appendChild(d); return d; }
+  function pastilles(refs) {
+    const zone = document.createElement("div"), detail = document.createElement("div"), tout = document.createElement("div");
+    zone.className = "refs";
+    refs.forEach((r) => {
+      const info = REFERENCES[r];
+      if (!info) return;
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "ref"; b.textContent = r; b.setAttribute("aria-expanded", "false");
+      const d = document.createElement("p"); d.className = "refdetail"; d.hidden = true;
+      const strong = document.createElement("b"); strong.textContent = r + " : ";
+      d.append(strong, document.createTextNode(info[0] + " (" + LIBELLE_STATUT[info[1]] + ")"));
+      b.addEventListener("click", () => {
+        const ouvert = b.getAttribute("aria-expanded") !== "true";
+        b.setAttribute("aria-expanded", String(ouvert)); d.hidden = !ouvert;
+      });
+      zone.appendChild(b); detail.appendChild(d);
+    });
+    tout.append(zone, detail);
+    return tout;
+  }
+  function afficherAssistant(r, source) {
+    const d = bulle("bot");
+    r.paragraphes.forEach((t) => { const p = document.createElement("p"); p.textContent = t; d.appendChild(p); });
+    if (r.refs && r.refs.length) d.appendChild(pastilles(r.refs));
+    if (source) { const s = document.createElement("span"); s.className = "src"; s.textContent = source; d.appendChild(s); }
+    defiler();
+  }
+  function accueil() {
+    afficherAssistant({ paragraphes: ["Bonjour. Je réponds aux questions sur le droit préférentiel de souscription, l'apport d'immeuble et le contrôle de votre dossier, à partir des textes lus. Choisissez une question à gauche ou écrivez la vôtre."], refs: [] }, "");
+  }
+
+  const cle = () => $("as-cle").value.trim();
+  function majMode() {
+    const api = !!cle();
+    $("as-mode").textContent = api
+      ? "Mode API : l'assistant interroge Claude avec les textes de la plateforme et votre dossier. En cas d'erreur, il répond avec les textes locaux."
+      : "Mode local : réponses tirées des textes lus, sans connexion ni clé.";
+    $("as-mode").classList.toggle("api", api);
+  }
+  function promptSysteme() {
+    const refs = Object.entries(REFERENCES).map(([k, v]) => `- ${k} (${LIBELLE_STATUT[v[1]]}) : ${v[0]}`).join("\n");
+    const alertes = analyser(lireOperation()).map((a) => `- [${a.gravite}] ${a.theme} : ${a.message} (${a.references.join(", ")})`).join("\n");
+    return "Tu es l'assistant juridique de la plateforme DPS Foncier, qui aide à préparer une augmentation de capital dans une société tunisienne à objet foncier. " +
+      "Réponds en français, de façon claire et courte, en citant les articles. Appuie-toi sur les références ci-dessous. " +
+      "Si elles ne couvrent pas la question, dis-le et recommande un avocat ou un notaire tunisien. " +
+      "Ne présente jamais une réponse comme un avis juridique définitif, et n'invente ni article ni seuil.\n\nRÉFÉRENCES\n" + refs +
+      "\n\nDOSSIER ACTUEL (onglet Contrôle juridique)\n" + (alertes || "Aucune alerte.") +
+      "\n\nLe délai de libération du quart (art. 294) est ambigu : cinq ans dans le texte français imprimé, six mois selon la version arabe.";
+  }
+  async function reponseApi() {
+    const rep = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-api-key": cle(), "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
+      body: JSON.stringify({ model: MODELE_API, max_tokens: 1000, system: promptSysteme(), messages: historique.slice(-10) })
+    });
+    if (!rep.ok) {
+      let detail = "";
+      try { detail = (await rep.json()).error.message; } catch (_) { /* corps illisible */ }
+      throw new Error("HTTP " + rep.status + (detail ? " : " + detail : ""));
+    }
+    const data = await rep.json();
+    const texte = (data.content || []).filter((b) => b.type === "text").map((b) => b.text).join("\n").trim();
+    if (!texte) throw new Error("réponse vide");
+    return texte;
+  }
+  async function poser(question) {
+    question = question.trim();
+    if (!question) return;
+    const u = bulle("user"); u.textContent = question; defiler();
+    historique.push({ role: "user", content: question });
+    $("as-q").value = "";
+    let intro = null;
+    if (cle()) {
+      const attente = bulle("bot"); attente.classList.add("attente"); attente.textContent = "Réflexion en cours..."; defiler();
+      try {
+        const texte = await reponseApi();
+        attente.remove();
+        const refs = Object.keys(REFERENCES).filter((r) => new RegExp(echapper(r) + "(?![0-9a-z])").test(texte));
+        afficherAssistant({ paragraphes: texte.split(/\n{2,}/).map((t) => t.trim()).filter(Boolean), refs }, "Réponse de l'API");
+        historique.push({ role: "assistant", content: texte });
+        return;
+      } catch (e) {
+        attente.remove();
+        intro = "L'API n'a pas répondu (" + e.message + "). Voici la réponse locale.";
+      }
+    }
+    const r = reponseLocale(question);
+    afficherAssistant({ paragraphes: (intro ? [intro] : []).concat(r.paragraphes), refs: r.refs }, "Réponse locale");
+    historique.push({ role: "assistant", content: r.paragraphes.join("\n\n") });
+  }
+  $("as-form").addEventListener("submit", (e) => { e.preventDefault(); poser($("as-q").value); });
+  document.querySelectorAll("#as-starters [data-q]").forEach((b) => b.addEventListener("click", () => poser(b.dataset.q)));
+  $("as-effacer").addEventListener("click", () => { chat.textContent = ""; historique.length = 0; accueil(); });
+  $("as-cle").addEventListener("input", majMode);
+  majMode(); accueil();
+
+  /* ---------- Branchements ---------- */
+  document.querySelectorAll("#p-souscription input").forEach((el) => el.addEventListener("input", renderSouscription));
+  document.querySelectorAll("#p-apport input").forEach((el) => el.addEventListener("input", renderApport));
+  document.querySelectorAll("#p-juridique input, #p-juridique select").forEach((el) => {
+    el.addEventListener("input", renderJuridique); el.addEventListener("change", renderJuridique);
+  });
+
+  ecrireOperation(EXEMPLE);
+  renderSouscription(); renderApport(); renderJuridique();
+  depuisHash();
+})();
+</script>
+
+</body>
+</html>

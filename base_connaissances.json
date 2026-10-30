@@ -1,0 +1,456 @@
+[
+ {
+  "id": "dps",
+  "mots": [
+   "dps",
+   "droit preferentiel",
+   "preferentiel",
+   "renoncer",
+   "renonciation",
+   "cessible",
+   "negociable"
+  ],
+  "texte": [
+   "Dans une société anonyme, chaque actionnaire a un droit de préférence à la souscription des actions de numéraire, proportionnel au montant de ses actions. Toute clause contraire est réputée non avenue.",
+   "Pendant la souscription, le droit est négociable lorsqu'il est détaché d'actions négociables, sinon cessible dans les mêmes conditions que l'action. Chaque actionnaire peut y renoncer à titre individuel."
+  ],
+  "refs": [
+   "CSC art. 296"
+  ]
+ },
+ {
+  "id": "suppression",
+  "mots": [
+   "suppression",
+   "supprimer",
+   "supprime",
+   "sans dps",
+   "exclure le droit",
+   "retirer le droit"
+  ],
+  "texte": [
+   "L'assemblée générale extraordinaire qui décide ou autorise l'augmentation peut supprimer le droit préférentiel pour tout ou partie de l'augmentation.",
+   "Elle doit approuver, à peine de nullité de l'augmentation, le rapport du conseil d'administration (ou du directoire) et celui des commissaires aux comptes. Une clause des statuts ne suffit pas : la suppression exige une résolution de l'assemblée extraordinaire."
+  ],
+  "refs": [
+   "CSC art. 300",
+   "CSC art. 296"
+  ]
+ },
+ {
+  "id": "delai",
+  "mots": [
+   "delai",
+   "jours",
+   "duree de souscription",
+   "ouverture",
+   "cloture",
+   "quinze",
+   "vingt et un",
+   "21 jours",
+   "15 jours"
+  ],
+  "texte": [
+   "SA : le délai d'exercice du droit de souscription ne peut jamais être inférieur à quinze jours. Il court à partir de l'annonce au Journal officiel du droit préférentiel, des dates d'ouverture et de clôture et de la valeur des actions à l'émission.",
+   "SARL : au moins vingt et un jours à compter de l'ouverture du droit de souscription, avec un avis écrit à chaque associé."
+  ],
+  "refs": [
+   "CSC art. 301",
+   "CSC art. 131"
+  ]
+ },
+ {
+  "id": "publicite",
+  "mots": [
+   "publicite",
+   "journal officiel",
+   "jort",
+   "annonce",
+   "publication",
+   "greffe",
+   "registre"
+  ],
+  "texte": [
+   "SA : les modalités du droit (dates d'ouverture et de clôture, valeur des actions) sont annoncées au Journal officiel, et la société accomplit avant l'ouverture de la souscription les formalités de publicité des articles 163 et suivants. La décision d'augmentation est publiée selon l'article 163."
+  ],
+  "refs": [
+   "CSC art. 301",
+   "CSC art. 302",
+   "CSC art. 293"
+  ]
+ },
+ {
+  "id": "liberation",
+  "mots": [
+   "libere",
+   "liberation",
+   "liberer",
+   "quart",
+   "prime d'emission",
+   "295",
+   "294",
+   "capital existant"
+  ],
+  "texte": [
+   "Le capital social doit être intégralement libéré avant toute émission de nouvelles actions, à peine de nullité (art. 295).",
+   "Pour l'augmentation, le quart du montant et la totalité de la prime d'émission doivent être libérés dans le délai de l'article 294, sinon la décision est réputée non écrite. Le texte français imprimé indique cinq ans, et une note de l'Imprimerie officielle demande de lire six mois selon la version arabe : faites confirmer ce délai. L'augmentation elle-même doit être réalisée dans les cinq ans de la décision."
+  ],
+  "refs": [
+   "CSC art. 295",
+   "CSC art. 294"
+  ]
+ },
+ {
+  "id": "decision",
+  "mots": [
+   "assemblee",
+   "decision",
+   "quorum",
+   "majorite",
+   "delegation",
+   "deleguer",
+   "extraordinaire",
+   "trois quarts des associes"
+  ],
+  "texte": [
+   "SA : l'augmentation est décidée par l'assemblée générale extraordinaire, dans les conditions de la loi. Elle peut déléguer au conseil les pouvoirs de la réaliser, mais une clause des statuts qui donne au conseil le pouvoir de décider l'augmentation est réputée non avenue.",
+   "SARL : modification des statuts par les associés représentant les trois quarts du capital, ou selon le quorum et la majorité prévus aux statuts (assemblée en présence de 50 % du capital, puis une seconde après 60 jours en présence d'un tiers, décision à la majorité des deux tiers des présents)."
+  ],
+  "refs": [
+   "CSC art. 293",
+   "CSC art. 294",
+   "CSC art. 131"
+  ]
+ },
+ {
+  "id": "apport",
+  "mots": [
+   "apport",
+   "nature",
+   "commissaire aux apports",
+   "evaluation",
+   "expert",
+   "apporteur",
+   "evalue"
+  ],
+  "texte": [
+   "SA : un ou plusieurs commissaires aux apports sont désignés par ordonnance sur requête du président du tribunal de première instance, parmi les experts judiciaires. L'assemblée extraordinaire délibère sur l'évaluation. Si elle l'approuve, elle déclare l'augmentation réalisée. Si elle la réduit, l'accord exprès de l'apporteur est requis, sinon l'augmentation n'est pas réalisée. Les actions d'apport sont libérées dès leur émission.",
+   "Le commissaire ne peut pas être l'apporteur, ni ses proches jusqu'au deuxième degré, ni ceux des administrateurs, entre autres cas d'incompatibilité.",
+   "SARL : évaluation par un commissaire aux apports, sauf si les associés décident à la majorité de s'en passer pour des apports de 3 000 dinars au plus. Sans commissaire, ou si la valeur retenue diffère de la sienne, associés et souscripteurs sont solidairement responsables envers les tiers pendant trois ans."
+  ],
+  "refs": [
+   "CSC art. 306",
+   "CSC art. 173",
+   "CSC art. 174",
+   "CSC art. 100",
+   "CSC art. 135"
+  ]
+ },
+ {
+  "id": "immeuble",
+  "mots": [
+   "immeuble",
+   "immatricule",
+   "immatriculation",
+   "livre foncier",
+   "titre foncier",
+   "inscription",
+   "notaire",
+   "acte d'apport"
+  ],
+  "texte": [
+   "Si l'apport comprend un immeuble immatriculé, l'acte doit être rédigé selon la législation en vigueur, sous peine de nullité (CSC art. 3).",
+   "Un droit réel sur un immeuble immatriculé ne se constitue qu'à compter de son inscription au Livre Foncier : tant qu'elle n'est pas faite, la société n'est pas titulaire du droit. Les droits existants sont inscrits sur le titre. Si l'immeuble n'est pas immatriculé, l'immatriculation est facultative et tout titulaire d'un droit réel peut la demander.",
+   "Les articles du Code des droits réels ont été lus sur un site de documentation juridique : à confronter au Journal officiel."
+  ],
+  "refs": [
+   "CSC art. 3",
+   "CDR art. 305",
+   "CDR art. 308",
+   "CDR art. 317 et 318"
+  ]
+ },
+ {
+  "id": "reserve",
+  "mots": [
+   "reserve fonciere",
+   "priorite d'achat",
+   "catu",
+   "preemption",
+   "perimetre"
+  ],
+  "texte": [
+   "Dans un périmètre de réserve foncière, l'État, une collectivité locale ou une agence peut avoir un droit de priorité d'achat, prénoté sur le titre. Un contrat conclu en violation de ce droit peut être annulé.",
+   "Ce droit est distinct du droit préférentiel de souscription. À faire valider : son application à un apport en société, et pas seulement à une vente."
+  ],
+  "refs": [
+   "CATU art. 42 à 44"
+  ]
+ },
+ {
+  "id": "etranger",
+  "mots": [
+   "etranger",
+   "etrangere",
+   "gouverneur",
+   "agricole",
+   "non resident"
+  ],
+  "texte": [
+   "L'acquisition d'un immeuble par un étranger exige l'autorisation préalable du gouverneur (décret du 4 juin 1957), avec des exceptions, par exemple en zone touristique ou industrielle (loi 2005-40). La terre agricole lui est fermée selon la source consultée.",
+   "Ces points viennent de sources secondaires : à faire valider par un juriste tunisien."
+  ],
+  "refs": [
+   "Décret du 4 juin 1957",
+   "Loi 2005-40",
+   "Terres agricoles"
+  ]
+ },
+ {
+  "id": "insuffisance",
+  "mots": [
+   "insuffisant",
+   "insuffisante",
+   "non souscrit",
+   "non souscrites",
+   "reductible",
+   "redistribution",
+   "trois quarts",
+   "limitation",
+   "cinq pour cent",
+   "souscriptions incompletes"
+  ],
+  "texte": [
+   "Si les souscriptions n'atteignent pas la totalité de l'augmentation : elle peut être limitée au montant souscrit si celui-ci atteint les trois quarts et si l'assemblée l'a prévu expressément ; les actions non souscrites peuvent être redistribuées entre actionnaires, sauf décision contraire, ou offertes au public si l'assemblée l'a admis.",
+   "Le conseil peut toujours limiter d'office l'augmentation lorsque le non souscrit représente moins de 5 %. Sinon l'augmentation n'est pas réalisée.",
+   "À titre réductible, les actions non souscrites vont aux actionnaires qui ont demandé plus que leur droit, proportionnellement à leurs parts et dans la limite de leurs demandes."
+  ],
+  "refs": [
+   "CSC art. 297",
+   "CSC art. 298",
+   "CSC art. 299"
+  ]
+ },
+ {
+  "id": "minoritaires",
+  "mots": [
+   "minoritaire",
+   "minoritaires",
+   "recours",
+   "annulation",
+   "expertise",
+   "questions ecrites",
+   "rachat",
+   "retrait"
+  ],
+  "texte": [
+   "Questions écrites au conseil au moins deux fois par an : à partir de 5 % du capital (3 % si la société fait appel public à l'épargne, ou participation d'un million de dinars). Réponse écrite due dans le mois.",
+   "À partir de 10 % du capital : annulation des décisions prises dans l'intérêt de quelques actionnaires ou d'un tiers (action prescrite par un an) et expertise de gestion.",
+   "Hors appel public à l'épargne, les actionnaires détenant 5 % au plus peuvent imposer le rachat de leurs titres à un prix fixé par expertise."
+  ],
+  "refs": [
+   "CSC art. 284 bis",
+   "CSC art. 290",
+   "CSC art. 290 bis",
+   "CSC art. 290 ter"
+  ]
+ },
+ {
+  "id": "sarl",
+  "mots": [
+   "sarl",
+   "responsabilite limitee",
+   "parts sociales"
+  ],
+  "texte": [
+   "SARL : chaque associé participe à l'augmentation proportionnellement à sa part, dans un délai d'au moins 21 jours, après avis écrit. Les parts non souscrites sont réparties entre les autres associés sous 21 jours, puis la souscription peut être ouverte aux tiers par décision de l'assemblée. Nul associé ne peut être obligé d'augmenter son engagement.",
+   "Les fonds sont déposés auprès d'un établissement financier. Si l'augmentation n'est pas réalisée dans les six mois de l'assemblée, tout apporteur peut demander à retirer son apport.",
+   "Le Code ne prévoit pas de suppression du droit de participation des associés de SARL, et leurs droits fondamentaux ne peuvent être limités."
+  ],
+  "refs": [
+   "CSC art. 131",
+   "CSC art. 134",
+   "CSC art. 11",
+   "CSC art. 133"
+  ]
+ },
+ {
+  "id": "sci",
+  "mots": [
+   "sci",
+   "societe civile"
+  ],
+  "texte": [
+   "Le Code des sociétés commerciales vise les sociétés commerciales, et le droit préférentiel des articles 296 et suivants concerne la société anonyme. Pour une SCI, le droit de souscription dépend des statuts et du droit des sociétés civiles, qui n'est pas dans les textes lus. Faites valider le régime par un juriste avant d'ouvrir la souscription."
+  ],
+  "refs": [
+   "CSC art. 296"
+  ]
+ },
+ {
+  "id": "valeur",
+  "mots": [
+   "valeur du droit",
+   "valeur d'un droit",
+   "cours theorique",
+   "formule",
+   "calculer",
+   "calcul",
+   "detachement",
+   "bvmt",
+   "bourse de tunis"
+  ],
+  "texte": [
+   "Méthode de la Bourse de Tunis. Au détachement : valeur du droit Ds = N / (A + N) x (C - PE - D), avec A le nombre d'actions anciennes, N le nombre d'actions nouvelles, C le cours de clôture de la veille, PE le prix d'émission et D la différence de jouissance en dividende. Le cours de référence de l'action devient C moins Ds.",
+   "Pendant la période de souscription : Ds = N / A x (C - D - PE), avec C le cours de référence de la ligne principale. Une action nouvelle non assimilée vaut C - D.",
+   "L'onglet Droit de souscription fait ce calcul pour votre opération."
+  ],
+  "refs": [
+   "BVMT droits de souscription"
+  ]
+ },
+ {
+  "id": "jouissance",
+  "mots": [
+   "jouissance",
+   "dividende"
+  ],
+  "texte": [
+   "La différence de jouissance (D) est le dividende que les actions nouvelles ne touchent pas, par rapport aux anciennes. Elle réduit la valeur du droit, car les actions nouvelles valent moins que les anciennes jusqu'à leur assimilation. À défaut d'information, la Bourse retient le dividende de l'année précédente. Si les actions nouvelles sont assimilées dès l'émission, D vaut 0."
+  ],
+  "refs": [
+   "BVMT droits de souscription"
+  ]
+ },
+ {
+  "id": "choix",
+  "mots": [
+   "exercer",
+   "vendre",
+   "expirer",
+   "laisser expirer",
+   "que faire de mes droits",
+   "garder mes droits"
+  ],
+  "texte": [
+   "Au cours théorique, exercer et vendre ses droits donnent le même résultat financier : la différence tient à la participation. En exerçant, on garde son pourcentage du capital. En vendant, on est dilué. Laisser expirer fait perdre la valeur des droits.",
+   "Vendre est préférable si le droit est coté au-dessus de sa valeur théorique, exercer s'il est coté en dessous. L'onglet Droit de souscription compare les trois choix, avant frais de courtage et fiscalité."
+  ],
+  "refs": [
+   "BVMT droits de souscription"
+  ]
+ },
+ {
+  "id": "dilution",
+  "mots": [
+   "dilution",
+   "surevalue",
+   "surevaluation",
+   "perte des autres",
+   "apport d'immeuble",
+   "valeur declaree"
+  ],
+  "texte": [
+   "Quand l'immeuble est apporté pour une valeur déclarée supérieure à sa valeur réelle, l'apporteur reçoit plus d'actions que son bien ne le justifie, et les autres associés portent la différence. Actions émises = valeur déclarée / prix d'émission. Valeur par action après l'opération = (capitalisation avant + valeur réelle) / (actions anciennes + actions émises).",
+   "L'onglet Apport d'immeuble chiffre la perte. La plateforme alerte à partir de 10 % d'écart entre valeur déclarée et valeur expertisée : c'est un choix de la plateforme, pas un seuil légal."
+  ],
+  "refs": [
+   "CSC art. 306"
+  ]
+ },
+ {
+  "id": "fiscalite",
+  "mots": [
+   "fiscal",
+   "fiscalite",
+   "impot",
+   "enregistrement",
+   "plus-value",
+   "plus value",
+   "cdet",
+   "taxe"
+  ],
+  "texte": [
+   "La cession de titres portant sur des droits d'immeubles est traitée comme une vente d'immeubles pour les droits d'enregistrement. Le taux et le régime de la plus-value sont à vérifier dans les textes en vigueur : la note commune consultée date de 2011.",
+   "Les calculs de la plateforme ne tiennent pas compte de la fiscalité ni des frais de courtage."
+  ],
+  "refs": [
+   "CDET art. 29",
+   "Note commune 16/2011"
+  ]
+ },
+ {
+  "id": "cotee",
+  "mots": [
+   "cotee",
+   "cote",
+   "appel public",
+   "bourse",
+   "avis de realisation",
+   "cmf",
+   "marche financier",
+   "assimilation"
+  ],
+  "texte": [
+   "Pour une société cotée, les droits sont détachés à la date d'effet de l'augmentation et négociables pendant la période de souscription. Les actions nouvelles non assimilées sont négociables à la date fixée par l'avis de réalisation publié au bulletin de la Bourse.",
+   "Les formalités propres au marché financier (Conseil du marché financier, Bourse) relèvent de textes absents des sources lues : à vérifier. Les seuils de recours des actionnaires sont plus bas (3 % pour les questions écrites)."
+  ],
+  "refs": [
+   "BVMT droits de souscription",
+   "CSC art. 284 bis"
+  ]
+ },
+ {
+  "id": "incorporation",
+  "mots": [
+   "incorporation",
+   "reserves",
+   "gratuite",
+   "gratuites",
+   "bonus"
+  ],
+  "texte": [
+   "L'augmentation par incorporation de réserves, de bénéfices ou de primes d'émission ne donne pas lieu à souscription en numéraire. En SA, la majoration de la valeur nominale exige l'unanimité, sauf s'il s'agit d'une incorporation de réserves, de bénéfices ou de primes. En SARL, elle peut être décidée par les associés représentant plus de la moitié du capital.",
+   "Cet outil ne calcule pas de valeur de droit pour ce cas."
+  ],
+  "refs": [
+   "CSC art. 292",
+   "CSC art. 133"
+  ]
+ },
+ {
+  "id": "dossier",
+  "mots": [
+   "mon dossier",
+   "dossier",
+   "alerte",
+   "alertes",
+   "bloquant",
+   "bloquants",
+   "corriger",
+   "a corriger",
+   "conforme",
+   "conformite"
+  ],
+  "texte": [],
+  "refs": []
+ },
+ {
+  "id": "fiabilite",
+  "mots": [
+   "fiable",
+   "fiabilite",
+   "source",
+   "sources",
+   "officiel",
+   "edition",
+   "avocat",
+   "avis juridique"
+  ],
+  "texte": [
+   "Les articles du Code des sociétés commerciales ont été lus dans l'édition officielle de l'Imprimerie officielle (mise à jour du 10 février 2022). Les formules viennent du document de la Bourse de Tunis (mars 2009). Le Code des droits réels, le CATU et le CDET ont été lus sur des sites de documentation juridique et restent à confronter au Journal officiel.",
+   "Les réponses de l'assistant sont indicatives et ne remplacent pas l'avis d'un avocat ou d'un notaire tunisien."
+  ],
+  "refs": []
+ }
+]
